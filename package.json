@@ -1,0 +1,19 @@
+{
+  "name": "q-a-api",
+  "version": "1.0.0",
+  "description": "Providing the Q&A section of the catwalk project",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mantle-SDC/q-a-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mantle-SDC/q-a-api/issues"
+  },
+  "homepage": "https://github.com/Mantle-SDC/q-a-api#readme"
+}
