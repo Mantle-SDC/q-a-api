@@ -4,7 +4,8 @@
   "description": "Providing the Q&A section of the catwalk project",
   "main": "server/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc --outDir ./dist"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/Mantle-SDC/q-a-api/issues"
   },
-  "homepage": "https://github.com/Mantle-SDC/q-a-api#readme"
+  "homepage": "https://github.com/Mantle-SDC/q-a-api#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.4.3"
+  }
 }
