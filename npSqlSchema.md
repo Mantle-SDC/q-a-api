@@ -1,4 +1,4 @@
-# SQL Schemas
+# NoSQL Schemas
 
 ## Question
 * question_id; int
