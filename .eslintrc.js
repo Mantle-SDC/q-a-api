@@ -5,19 +5,19 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    'airbnb-base',
+    "airbnb-base",
     "plugin:@typescript-eslint/recommended",
     "plugin:import/typescript",
   ],
-  parser: '@typescript-eslint/parser',
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 12,
   },
   plugins: [
-    '@typescript-eslint',
+    "@typescript-eslint",
   ],
   rules: {
-    quotes: 0,
+    quotes: ["error", "double"],
     "import/extensions": [
       "error",
       "ignorePackages",

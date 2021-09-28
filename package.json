@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "build": "tsc --outDir ./dist",
-    "lint": "eslint src/* --ext .ts"
+    "lint": "eslint src/* --ext .ts",
+    "lint-fix": "eslint src/* --ext .ts --fix"
   },
   "repository": {
     "type": "git",
