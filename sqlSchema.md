@@ -2,9 +2,10 @@
 
 ## Question
 * question_id; int, primary key
-* question_body: string
+* question_body: string(1000)
 * question_date: date
-* asker_name: string
+* asker_name: string(60)
+* asker_email: string(60)
 * question_helpfulness: int
 * reported: bool
 
@@ -12,9 +13,10 @@
 ## Answer
 * answer_id: int, primary key
 * question_id: int, foreign key, question
-* body: string
+* body: string(1000)
 * date: date
-* answerer_name: string
+* answerer_name: string(60)
+* answerer_email: string(60)
 * helpfulness: int
 
 

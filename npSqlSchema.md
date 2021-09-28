@@ -12,6 +12,6 @@
   * date: date
   * answerer_name: string
   * helpfulness: int
-  * photos: list<photo>
+  * photos: list<photo> (max 5)
     * photo_id: int, primary key
     * url: string
