@@ -1,3 +1,7 @@
 import hello from "./hello";
 
-console.log(hello + " world");
+interface foobar {
+  id: number,
+}
+
+console.log(`${hello} world`);
