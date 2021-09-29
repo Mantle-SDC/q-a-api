@@ -21,4 +21,18 @@ describe("Given a blank database", () => {
       expect(postResponse.statusCode).toBe(400);
     });
   });
+  describe("When a valie post is made to /qa/questions", () => {
+    let postResponse: Response;
+    beforeEach(async () => {
+      postResponse = await request(server).post(baseUrl).send({
+        body: "What is this?",
+        name: "Trevor Settesl",
+        email: "email@gmail.com",
+        product_id: 1,
+      });
+    });
+    test("Then the response should have a 201 response", () => {
+      expect(postResponse.statusCode).toBe(201);
+    });
+  });
 });
