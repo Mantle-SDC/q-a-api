@@ -2,12 +2,13 @@
   "name": "q-a-api",
   "version": "1.0.0",
   "description": "Providing the Q&A section of the catwalk project",
-  "main": "server/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "test": "jest",
     "build": "tsc --outDir ./dist",
     "lint": "eslint src/* --ext .ts",
-    "lint-fix": "eslint src/* --ext .ts --fix"
+    "lint-fix": "eslint src/* --ext .ts --fix",
+    "server": "node dist/src/index.js"
   },
   "repository": {
     "type": "git",
