@@ -60,6 +60,16 @@ describe("Given a blank database", () => {
     test("Then the response should have a 201 response", () => {
       expect(postResponse.statusCode).toBe(201);
     });
-    // describe("And a valid get is made to /qa/questions", () );
+    describe("And a valid get is made to /qa/questions", () => {
+      let getResponse: Response;
+      beforeEach(async () => {
+        getResponse = await request(server).get(baseUrl).send({
+          product_id: 1,
+        });
+      });
+      test("Then the get should contain a single result", () => {
+        expect(getResponse.body.results).toHaveLength(1);
+      });
+    });
   });
 });
