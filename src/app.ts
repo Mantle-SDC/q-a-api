@@ -1,13 +1,12 @@
 import express from "express";
 import http from "http";
+import baseUrl from "../dist/src/urls";
 
 const App = ():http.Server => {
   const app = express();
 
-  app.post("/qa/questions", (req, res, next) => {
-    req.baseUrl = "";
-    res.statusCode = 201;
-    res.send();
+  app.post(baseUrl, (req, res, next) => {
+    res.status(400).send();
     next();
   });
 

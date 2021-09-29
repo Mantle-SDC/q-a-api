@@ -2,6 +2,7 @@ import request from "supertest";
 import http from "http";
 import { Response } from "superagent";
 import App from "../app";
+import baseUrl from "../../dist/src/urls";
 
 describe("Given a blank database", () => {
   let server: http.Server;
@@ -11,13 +12,13 @@ describe("Given a blank database", () => {
   afterEach(() => {
     server.close();
   });
-  describe("When a post is made to /qa/questions", () => {
+  describe("When a blank post is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
-      postResponse = await request(server).post("/qa/questions").send({});
+      postResponse = await request(server).post(baseUrl).send({});
     });
-    test("Then the response should have a 201 response", () => {
-      expect(postResponse.statusCode).toBe(201);
+    test("Then the response should have a 400 response", () => {
+      expect(postResponse.statusCode).toBe(400);
     });
   });
 });
