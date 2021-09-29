@@ -1,3 +1,4 @@
 import App from "./app";
+import InMemory from "./database/InMemory";
 
-App();
+App(InMemory());

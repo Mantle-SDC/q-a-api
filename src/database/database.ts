@@ -1,5 +1,8 @@
+import question from "../models/question";
+
 interface database {
-  createQuestion: () => string,
+  saveQuestion: (q: question) => void,
+  getQuestions: () => question[],
 }
 
 export default database;

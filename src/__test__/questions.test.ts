@@ -3,11 +3,12 @@ import http from "http";
 import { Response } from "superagent";
 import App from "../app";
 import baseUrl from "../urls";
+import InMemory from "../database/InMemory";
 
 describe("Given a blank database", () => {
   let server: http.Server;
   beforeEach(() => {
-    server = App();
+    server = App(InMemory());
   });
   afterEach(() => {
     server.close();
