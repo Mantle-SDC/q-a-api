@@ -2,13 +2,18 @@ import question from "../models/question";
 import database from "./database";
 
 function InMemory(): database {
-  const questions: question[] = [];
+  const questions: {
+    [productId: number]: question[],
+  } = {};
 
   return {
-    saveQuestion: (q) => {
-      questions.push(q);
+    saveQuestion: (productId, q) => {
+      if (!questions[productId]) {
+        questions[productId] = [];
+      }
+      questions[productId].push(q);
     },
-    getQuestions: () => questions,
+    getQuestions: (productId) => questions[productId] || [],
   };
 }
 

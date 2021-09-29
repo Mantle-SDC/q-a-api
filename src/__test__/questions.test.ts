@@ -16,16 +16,16 @@ describe("Given a blank database", () => {
   afterEach(() => {
     server.close();
   });
-  describe("When a blank post is made to /qa/questions", () => {
+  describe("When a blank POST is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
       postResponse = await request(server).post(baseUrl).send({});
     });
-    test("Then the response should have a 400 response", () => {
+    test("Then the response should have a 400 status code", () => {
       expect(postResponse.statusCode).toBe(400);
     });
   });
-  describe("When a blank get is made to /qa/questions", () => {
+  describe("When a blank GET is made to /qa/questions", () => {
     let getResponse: Response;
     beforeEach(async () => {
       getResponse = await request(server).get(baseUrl).send({});
@@ -34,14 +34,14 @@ describe("Given a blank database", () => {
       expect(getResponse.statusCode).toBe(400);
     });
   });
-  describe("When a valid get is made to /qa/questions", () => {
+  describe("When a valid GET is made to /qa/questions", () => {
     let getResponse: Response;
     beforeEach(async () => {
       getResponse = await request(server).get(baseUrl).send({
         product_id: 1,
       });
     });
-    test("The the server responds with 200", () => {
+    test("Then the server responds with 200", () => {
       expect(getResponse.statusCode).toBe(200);
     });
     test("The the server responds with product_id", () => {
@@ -51,7 +51,7 @@ describe("Given a blank database", () => {
       expect(getResponse.body.results).toEqual([]);
     });
   });
-  describe("When a valid post is made to /qa/questions", () => {
+  describe("When a valid POST is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
       postResponse = await request(server).post(baseUrl).send({
@@ -64,14 +64,14 @@ describe("Given a blank database", () => {
     test("Then the response should have a 201 response", () => {
       expect(postResponse.statusCode).toBe(201);
     });
-    describe("And a valid get is made to /qa/questions", () => {
+    describe("And a valid GET is made to /qa/questions", () => {
       let getResponse: Response;
       beforeEach(async () => {
         getResponse = await request(server).get(baseUrl).send({
           product_id: 1,
         });
       });
-      test("Then the get should contain a single result", () => {
+      test("Then the GET should contain a single result", () => {
         expect(getResponse.body.results).toHaveLength(1);
       });
       test("Then the response should have the correct shape and values", () => {
@@ -85,6 +85,28 @@ describe("Given a blank database", () => {
         expect(result).toHaveProperty("answers", {});
 
         expect(typeof result.question_id).toBe(typeof 1);
+      });
+    });
+    describe("When a valid POST is made to /qa/questions with a different product_id", () => {
+      // let otherPostResponse: Response;
+      beforeEach(async () => {
+        await request(server).post(baseUrl).send({
+          body: "Can I wear it?",
+          name: "Trevor Settles",
+          email: "email@gmail.com",
+          product_id: 2,
+        });
+      });
+      describe("When a GET is made for the first product_id", () => {
+        let getResponse: Response;
+        beforeEach(async () => {
+          getResponse = await request(server).get(baseUrl).send({
+            product_id: 1,
+          });
+        });
+        test("Then the response only cotains the question for the first product", () => {
+          expect(getResponse.body.results).toHaveLength(1);
+        });
       });
     });
   });
