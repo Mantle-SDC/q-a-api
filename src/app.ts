@@ -17,7 +17,7 @@ const App = (db: database): http.Server => {
         results: qs.map((q) => ({
           question_id: 1,
           question_body: q.body,
-          question_date: Date.now().toString(),
+          question_date: new Date().toISOString(),
           asker_name: q.name,
           question_helpfulness: 0,
           reported: false,

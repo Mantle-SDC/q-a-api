@@ -71,7 +71,7 @@ describe("Given a blank database", () => {
       test("Then the get should contain a single result", () => {
         expect(getResponse.body.results).toHaveLength(1);
       });
-      test("Then the response should have the correct shape", () => {
+      test("Then the response should have the correct shape and values", () => {
         const result = getResponse.body.results[0];
         expect(result).toHaveProperty("question_id");
         expect(result).toHaveProperty("question_body", "What is this?");
@@ -80,6 +80,9 @@ describe("Given a blank database", () => {
         expect(result).toHaveProperty("question_helpfulness", 0);
         expect(result).toHaveProperty("reported", false);
         expect(result).toHaveProperty("answers", {});
+
+        expect(typeof result.question_id).toBe(typeof 1);
+        expect(result.question_date).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}\D$/);
       });
     });
   });
