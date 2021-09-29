@@ -43,6 +43,9 @@ describe("Given a blank database", () => {
     test("The the server responds with product_id", () => {
       expect(getResponse.body.product_id).toBe(1);
     });
+    test("The the server responds with empty list of results", () => {
+      expect(getResponse.body.results).toEqual([]);
+    });
   });
   describe("When a valid post is made to /qa/questions", () => {
     let postResponse: Response;

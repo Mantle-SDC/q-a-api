@@ -12,6 +12,7 @@ const App = (): http.Server => {
     if (req.body.product_id) {
       res.status(200).send({
         product_id: req.body.product_id,
+        results: [],
       });
     } else {
       res.status(400).send();
