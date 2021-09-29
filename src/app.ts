@@ -1,6 +1,6 @@
 import express from "express";
 import http from "http";
-import baseUrl from "../dist/src/urls";
+import baseUrl from "./urls";
 
 const App = ():http.Server => {
   const app = express();

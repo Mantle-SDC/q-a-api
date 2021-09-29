@@ -5,7 +5,7 @@
   "main": "dist/src/index.js",
   "scripts": {
     "test": "jest",
-    "build": "tsc --outDir ./dist",
+    "build": "rm -r dist || true && tsc --outDir ./dist",
     "lint": "eslint src/* --ext .ts",
     "lint-fix": "eslint src/* --ext .ts --fix",
     "server": "node dist/src/index.js"

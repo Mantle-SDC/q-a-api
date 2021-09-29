@@ -2,7 +2,7 @@ import request from "supertest";
 import http from "http";
 import { Response } from "superagent";
 import App from "../app";
-import baseUrl from "../../dist/src/urls";
+import baseUrl from "../urls";
 
 describe("Given a blank database", () => {
   let server: http.Server;
