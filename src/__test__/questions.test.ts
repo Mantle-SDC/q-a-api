@@ -1,17 +1,20 @@
 import request from "supertest";
-import express from "express";
+import http from "http";
 import { Response } from "superagent";
 import App from "../app";
 
 describe("Given a blank database", () => {
-  let app: express.Express;
+  let server: http.Server;
   beforeEach(() => {
-    app = App();
+    server = App();
+  });
+  afterEach(() => {
+    server.close();
   });
   describe("When a post is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
-      postResponse = await request(app).post("/qa/questions").send({});
+      postResponse = await request(server).post("/qa/questions").send({});
     });
     test("Then the response should have a 201 response", () => {
       expect(postResponse.statusCode).toBe(201);

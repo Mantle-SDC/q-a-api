@@ -1,6 +1,7 @@
 import express from "express";
+import http from "http";
 
-const App = ():express.Express => {
+const App = ():http.Server => {
   const app = express();
 
   app.post("/qa/questions", (req, res, next) => {
@@ -10,9 +11,9 @@ const App = ():express.Express => {
     next();
   });
 
-  app.listen(8080);
+  const server = app.listen(8080);
 
-  return app;
+  return server;
 };
 
 export default App;
