@@ -21,7 +21,30 @@ describe("Given a blank database", () => {
       expect(postResponse.statusCode).toBe(400);
     });
   });
-  describe("When a valie post is made to /qa/questions", () => {
+  describe("When a blank get is made to /qa/questions", () => {
+    let getResponse: Response;
+    beforeEach(async () => {
+      getResponse = await request(server).get(baseUrl).send({});
+    });
+    test("The the server responds with 400", () => {
+      expect(getResponse.statusCode).toBe(400);
+    });
+  });
+  describe("When a valid get is made to /qa/questions", () => {
+    let getResponse: Response;
+    beforeEach(async () => {
+      getResponse = await request(server).get(baseUrl).send({
+        product_id: 1,
+      });
+    });
+    test("The the server responds with 200", () => {
+      expect(getResponse.statusCode).toBe(200);
+    });
+    test("The the server responds with product_id", () => {
+      expect(getResponse.body.product_id).toBe(1);
+    });
+  });
+  describe("When a valid post is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
       postResponse = await request(server).post(baseUrl).send({
@@ -34,5 +57,6 @@ describe("Given a blank database", () => {
     test("Then the response should have a 201 response", () => {
       expect(postResponse.statusCode).toBe(201);
     });
+    // describe("And a valid get is made to /qa/questions", () );
   });
 });
