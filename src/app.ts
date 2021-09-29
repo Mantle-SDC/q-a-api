@@ -1,6 +1,7 @@
 import express from "express";
 import http from "http";
 import database from "./database/database";
+import question from "./models/question";
 import baseUrl from "./urls";
 
 const App = (
@@ -20,7 +21,7 @@ const App = (
         results: qs.map((q) => ({
           question_id: q.id,
           question_body: q.body,
-          question_date: dateConstructor().toISOString(),
+          question_date: q.createdAt,
           asker_name: q.name,
           question_helpfulness: 0,
           reported: false,
@@ -35,7 +36,9 @@ const App = (
 
   app.post(baseUrl, (req, res, next) => {
     if (Object.keys(req.body).length) {
-      db.saveQuestion(req.body.product_id, req.body);
+      const q: question = req.body;
+      q.createdAt = dateConstructor();
+      db.saveQuestion(req.body.product_id, q);
       res.status(201).send();
     } else {
       res.status(400).send();

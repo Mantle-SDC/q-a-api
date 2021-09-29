@@ -4,6 +4,7 @@ interface question {
   name: string,
   email: string,
   "product_id": number,
+  createdAt: Date,
 }
 
 export default question;
