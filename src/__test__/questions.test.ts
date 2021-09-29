@@ -8,7 +8,10 @@ import InMemory from "../database/InMemory";
 describe("Given a blank database", () => {
   let server: http.Server;
   beforeEach(() => {
-    server = App(InMemory());
+    server = App(
+      InMemory(),
+      () => new Date(0),
+    );
   });
   afterEach(() => {
     server.close();
@@ -75,14 +78,13 @@ describe("Given a blank database", () => {
         const result = getResponse.body.results[0];
         expect(result).toHaveProperty("question_id");
         expect(result).toHaveProperty("question_body", "What is this?");
-        expect(result).toHaveProperty("question_date");
+        expect(result).toHaveProperty("question_date", "1970-01-01T00:00:00.000Z");
         expect(result).toHaveProperty("asker_name", "Trevor Settles");
         expect(result).toHaveProperty("question_helpfulness", 0);
         expect(result).toHaveProperty("reported", false);
         expect(result).toHaveProperty("answers", {});
 
         expect(typeof result.question_id).toBe(typeof 1);
-        expect(result.question_date).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}\D$/);
       });
     });
   });

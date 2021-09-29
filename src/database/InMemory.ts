@@ -2,7 +2,7 @@ import question from "../models/question";
 import database from "./database";
 
 function InMemory(): database {
-  const questions:question[] = [];
+  const questions: question[] = [];
 
   return {
     saveQuestion: (q) => {

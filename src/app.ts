@@ -3,7 +3,10 @@ import http from "http";
 import database from "./database/database";
 import baseUrl from "./urls";
 
-const App = (db: database): http.Server => {
+const App = (
+  db: database,
+  dateConstructor: () => Date,
+): http.Server => {
   const app = express();
 
   app.use(express.json());
@@ -17,7 +20,7 @@ const App = (db: database): http.Server => {
         results: qs.map((q) => ({
           question_id: 1,
           question_body: q.body,
-          question_date: new Date().toISOString(),
+          question_date: dateConstructor().toISOString(),
           asker_name: q.name,
           question_helpfulness: 0,
           reported: false,
