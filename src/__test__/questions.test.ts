@@ -108,6 +108,17 @@ describe("Given a blank database", () => {
           expect(getResponse.body.results).toHaveLength(1);
         });
       });
+      describe("When a GET is made for the second product_id", () => {
+        let getResponse: Response;
+        beforeEach(async () => {
+          getResponse = await request(server).get(baseUrl).send({
+            product_id: 2,
+          });
+        });
+        test("Then the response cotains the questions for the second product", () => {
+          expect(getResponse.body.results[0].question_id).toBe(2);
+        });
+      });
     });
   });
 });

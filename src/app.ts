@@ -18,7 +18,7 @@ const App = (
       res.status(200).send({
         product_id: req.body.product_id,
         results: qs.map((q) => ({
-          question_id: 1,
+          question_id: q.id,
           question_body: q.body,
           question_date: dateConstructor().toISOString(),
           asker_name: q.name,

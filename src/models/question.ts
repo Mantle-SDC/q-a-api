@@ -1,4 +1,5 @@
 interface question {
+  id?: number,
   body: string,
   name: string,
   email: string,
