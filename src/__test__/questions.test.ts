@@ -53,7 +53,7 @@ describe("Given a blank database", () => {
     beforeEach(async () => {
       postResponse = await request(server).post(baseUrl).send({
         body: "What is this?",
-        name: "Trevor Settesl",
+        name: "Trevor Settles",
         email: "email@gmail.com",
         product_id: 1,
       });
@@ -70,6 +70,16 @@ describe("Given a blank database", () => {
       });
       test("Then the get should contain a single result", () => {
         expect(getResponse.body.results).toHaveLength(1);
+      });
+      test("Then the response should have the correct shape", () => {
+        const result = getResponse.body.results[0];
+        expect(result).toHaveProperty("question_id");
+        expect(result).toHaveProperty("question_body", "What is this?");
+        expect(result).toHaveProperty("question_date");
+        expect(result).toHaveProperty("asker_name", "Trevor Settles");
+        expect(result).toHaveProperty("question_helpfulness", 0);
+        expect(result).toHaveProperty("reported", false);
+        expect(result).toHaveProperty("answers", {});
       });
     });
   });

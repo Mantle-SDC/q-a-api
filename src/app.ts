@@ -11,9 +11,18 @@ const App = (db: database): http.Server => {
 
   app.get(baseUrl, (req, res, next) => {
     if (req.body.product_id) {
+      const qs = db.getQuestions();
       res.status(200).send({
         product_id: req.body.product_id,
-        results: db.getQuestions(),
+        results: qs.map((q) => ({
+          question_id: 1,
+          question_body: q.body,
+          question_date: Date.now().toString(),
+          asker_name: q.name,
+          question_helpfulness: 0,
+          reported: false,
+          answers: {},
+        })),
       });
     } else {
       res.status(400).send();
