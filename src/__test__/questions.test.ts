@@ -5,6 +5,13 @@ import App from "../app";
 import baseUrl from "../urls";
 import InMemory from "../database/InMemory";
 
+const validPost = {
+  body: "What is this?",
+  name: "Trevor Settles",
+  email: "email@gmail.com",
+  product_id: 1,
+};
+
 describe("Given a blank database", () => {
   let server: http.Server;
   beforeEach(() => {
@@ -119,6 +126,18 @@ describe("Given a blank database", () => {
           expect(getResponse.body.results[0].question_id).toBe(2);
         });
       });
+    });
+  });
+  describe("When a POST without a name is made to /qa/questions", () => {
+    let postResponse: Response;
+    beforeEach(async () => {
+      postResponse = await request(server).post(baseUrl).send({
+        ...validPost,
+        name: undefined,
+      });
+    });
+    test("Then the server responds with 400 status code", () => {
+      expect(postResponse.statusCode).toBe(400);
     });
   });
 });

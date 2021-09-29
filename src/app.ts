@@ -35,7 +35,7 @@ const App = (
   });
 
   app.post(baseUrl, (req, res, next) => {
-    if (Object.keys(req.body).length) {
+    if (Object.keys(req.body).length && req.body.name) {
       const q: question = req.body;
       q.createdAt = dateConstructor();
       db.saveQuestion(req.body.product_id, q);
