@@ -1,13 +1,7 @@
 import express from "express";
 import http from "http";
+import question from "./models/question";
 import baseUrl from "./urls";
-
-interface question {
-  body: string,
-  name: string,
-  email: string,
-  "product_id": number,
-}
 
 const App = (): http.Server => {
   const app = express();
