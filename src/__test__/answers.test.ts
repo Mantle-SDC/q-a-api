@@ -77,7 +77,7 @@ describe("Givena a server with a valid question", () => {
         expect(answers[aId]).toEqual({
           id: aId,
           body: "its pretty great",
-          date: "2018-08-18T00:00:00.000Z",
+          date: "1970-01-01T00:00:00.000Z",
           answerer_name: "Trevor Settles",
           helpfulness: 0,
           photos: [],

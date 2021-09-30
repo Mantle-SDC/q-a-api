@@ -58,8 +58,14 @@ const App = (
     const questionId = Number(req.params.question_id);
     const q = db.getQuestion(questionId);
     if (q) {
-      console.log("New answer:", req.body);
-      const answerId = db.saveAnswer(questionId, req.body);
+      const answerId = db.saveAnswer(questionId, {
+        body: req.body.body,
+        answerer_name: req.body.name,
+        photos: req.body.photos,
+        helpfulness: 0,
+        date: dateConstructor(),
+        reported: false,
+      });
       res.status(201).send({ answer_id: answerId });
     } else {
       res.status(400).send();

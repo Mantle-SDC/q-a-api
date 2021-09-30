@@ -1,3 +1,4 @@
+import answer from "../models/answer";
 import question from "../models/question";
 import database from "./database";
 
@@ -15,20 +16,22 @@ function InMemory(): database {
 
   return {
     saveQuestion: (productId, q) => {
-      const myQuestion = Object.create(q);
+      const myQuestion: question = { ...q };
       if (!questions[productId]) {
         questions[productId] = [];
       }
       myQuestion.id = currnetQId;
       currnetQId += 1;
+
       questions[productId].push(myQuestion);
       questions.all[myQuestion.id] = myQuestion;
+
       return myQuestion.id;
     },
     saveAnswer: (questionId, a) => {
-      const ans = Object.create(a);
+      const ans: answer = { ...a };
       ans.id = currentAId;
-      questions.all[questionId].answers[currentAId] = ans;
+      questions.all[questionId].answers[ans.id] = ans;
       currentAId += 1;
       return ans.id;
     },
