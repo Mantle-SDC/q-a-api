@@ -1,6 +1,6 @@
 import request from "supertest";
 import http from "http";
-import { Response } from "superagent";
+import { post, Response } from "superagent";
 import App from "../app";
 import baseUrl from "../urls";
 import InMemory from "../database/InMemory";
@@ -34,14 +34,21 @@ describe("Given a server with no questions", () => {
     });
   });
 });
-xdescribe("Givena a server with a valid question", () => {
+describe("Givena a server with a valid question", () => {
   let server: http.Server;
-  beforeEach(() => {
+  let postResponse: Response;
+  beforeEach(async () => {
     server = App(
       InMemory(),
       () => new Date(0),
       8082,
     );
+    postResponse = await request(server).post(`${baseUrl}`).send({
+      body: "What is this?",
+      name: "Trevor Settles",
+      email: "email@gmail.com",
+      product_id: 1,
+    });
   });
   afterEach(() => {
     server.close();

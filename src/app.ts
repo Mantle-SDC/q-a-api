@@ -45,8 +45,8 @@ const App = (
     ) {
       const q: question = req.body;
       q.createdAt = dateConstructor();
-      db.saveQuestion(req.body.product_id, q);
-      res.status(201).send();
+      const qID = db.saveQuestion(req.body.product_id, q);
+      res.status(201).send({ question_id: qID });
     } else {
       res.status(400).send();
     }

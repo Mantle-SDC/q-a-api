@@ -72,6 +72,9 @@ describe("Given a blank database", () => {
     test("Then the response should have a 201 response", () => {
       expect(postResponse.statusCode).toBe(201);
     });
+    test("then the response should contain the id of the question created", () => {
+      expect(postResponse.body.question_id).toBe(1);
+    });
     describe("And a valid GET is made to /qa/questions", () => {
       let getResponse: Response;
       beforeEach(async () => {

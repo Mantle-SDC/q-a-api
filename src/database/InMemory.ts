@@ -16,6 +16,7 @@ function InMemory(): database {
       myQuestion.id = currnetId;
       currnetId += 1;
       questions[productId].push(myQuestion);
+      return myQuestion.id;
     },
     getQuestions: (productId) => questions[productId] || [],
   };
