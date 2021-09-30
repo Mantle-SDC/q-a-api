@@ -54,7 +54,13 @@ const App = (
   });
 
   app.post(`${baseUrl}/:question_id/answers`, (req, res, next) => {
-    res.status(400).send();
+    const id = Number(req.params.question_id);
+    const q = db.getQuestion(id);
+    if (q) {
+      res.status(201).send();
+    } else {
+      res.status(400).send();
+    }
     next();
   });
 

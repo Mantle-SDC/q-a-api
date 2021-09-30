@@ -4,7 +4,12 @@ import database from "./database";
 function InMemory(): database {
   const questions: {
     [productId: number]: question[],
-  } = {};
+    all: {
+      [questionId: number]: question,
+    }
+  } = {
+    all: {},
+  };
   let currnetId = 1;
 
   return {
@@ -16,9 +21,11 @@ function InMemory(): database {
       myQuestion.id = currnetId;
       currnetId += 1;
       questions[productId].push(myQuestion);
+      questions.all[myQuestion.id] = myQuestion;
       return myQuestion.id;
     },
     getQuestions: (productId) => questions[productId] || [],
+    getQuestion: (questionId) => questions.all[questionId] || null,
   };
 }
 

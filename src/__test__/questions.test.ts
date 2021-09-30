@@ -91,7 +91,7 @@ describe("Given a blank database", () => {
         expect(result).toHaveProperty("question_body", "What is this?");
         expect(result).toHaveProperty("question_date", "1970-01-01T00:00:00.000Z");
         expect(result).toHaveProperty("asker_name", "Trevor Settles");
-        expect(result).toHaveProperty("question_helpfulness", 0);
+        expect(result.question_helpfulness).toBe(0);
         expect(result).toHaveProperty("reported", false);
         expect(result).toHaveProperty("answers", {});
 
