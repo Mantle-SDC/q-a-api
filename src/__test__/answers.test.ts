@@ -61,8 +61,26 @@ describe("Givena a server with a valid question", () => {
     test("then the response should have a 201 status code", () => {
       expect(answerPostResponse.statusCode).toBe(201);
     });
-    test("Then the response should contain the id for the answer created", () => {
+    test("Then the response body should contain the id for the answer created", () => {
       expect(answerPostResponse.body.answer_id).toBe(1);
+    });
+    describe("And when a GET is made for that productId", () => {
+      let getResponse: Response;
+      beforeEach(async () => {
+        getResponse = await request(server).get(baseUrl).send({
+          product_id: 1,
+        });
+      });
+      test("Then that answer is in the response", () => {
+        expect(getResponse.body.answers[postResponse.body.answer_id]).toEqual({
+          id: postResponse.body.answer_id,
+          body: "its pretty great",
+          date: "2018-08-18T00:00:00.000Z",
+          answerer_name: "Trevor Settles",
+          helpfulness: 0,
+          photos: [],
+        });
+      });
     });
   });
 });

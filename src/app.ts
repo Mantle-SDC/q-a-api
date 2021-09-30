@@ -26,7 +26,7 @@ const App = (
           asker_name: q.name,
           question_helpfulness: 0,
           reported: false,
-          answers: {},
+          answers: q.answers,
         })),
       });
     } else {
@@ -45,6 +45,7 @@ const App = (
     ) {
       const q: question = req.body;
       q.createdAt = dateConstructor();
+      q.answers = {};
       const qID = db.saveQuestion(req.body.product_id, q);
       res.status(201).send({ question_id: qID });
     } else {
@@ -57,7 +58,7 @@ const App = (
     const id = Number(req.params.question_id);
     const q = db.getQuestion(id);
     if (q) {
-      const answerId = db.saveAnswer(id);
+      const answerId = db.saveAnswer(id, req.body);
       res.status(201).send({ answer_id: answerId });
     } else {
       res.status(400).send();

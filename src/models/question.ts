@@ -1,3 +1,5 @@
+import answer from "./answer";
+
 interface question {
   id?: number,
   body: string,
@@ -5,6 +7,9 @@ interface question {
   email: string,
   "product_id": number,
   createdAt: Date,
+  answers: {
+    [answerId: number]: answer,
+  }
 }
 
 export default question;

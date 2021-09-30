@@ -25,8 +25,9 @@ function InMemory(): database {
       questions.all[myQuestion.id] = myQuestion;
       return myQuestion.id;
     },
-    saveAnswer: () => {
+    saveAnswer: (questionId, a) => {
       const prevAId = currentAId;
+      questions.all[questionId].answers[prevAId] = a;
       currentAId += 1;
       return prevAId;
     },
