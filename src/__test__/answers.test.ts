@@ -72,8 +72,10 @@ describe("Givena a server with a valid question", () => {
         });
       });
       test("Then that answer is in the response", () => {
-        expect(getResponse.body.answers[postResponse.body.answer_id]).toEqual({
-          id: postResponse.body.answer_id,
+        const aId = answerPostResponse.body.answer_id;
+        const { answers } = getResponse.body.results[0];
+        expect(answers[aId]).toEqual({
+          id: aId,
           body: "its pretty great",
           date: "2018-08-18T00:00:00.000Z",
           answerer_name: "Trevor Settles",

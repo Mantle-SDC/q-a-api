@@ -26,10 +26,11 @@ function InMemory(): database {
       return myQuestion.id;
     },
     saveAnswer: (questionId, a) => {
-      const prevAId = currentAId;
-      questions.all[questionId].answers[prevAId] = a;
+      const ans = Object.create(a);
+      ans.id = currentAId;
+      questions.all[questionId].answers[currentAId] = ans;
       currentAId += 1;
-      return prevAId;
+      return ans.id;
     },
     getQuestions: (productId) => questions[productId] || [],
     getQuestion: (questionId) => questions.all[questionId] || null,

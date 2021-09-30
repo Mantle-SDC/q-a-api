@@ -55,10 +55,11 @@ const App = (
   });
 
   app.post(`${baseUrl}/:question_id/answers`, (req, res, next) => {
-    const id = Number(req.params.question_id);
-    const q = db.getQuestion(id);
+    const questionId = Number(req.params.question_id);
+    const q = db.getQuestion(questionId);
     if (q) {
-      const answerId = db.saveAnswer(id, req.body);
+      console.log("New answer:", req.body);
+      const answerId = db.saveAnswer(questionId, req.body);
       res.status(201).send({ answer_id: answerId });
     } else {
       res.status(400).send();
