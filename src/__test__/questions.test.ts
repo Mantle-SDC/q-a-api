@@ -164,4 +164,16 @@ describe("Given a blank database", () => {
       expect(postResponse.statusCode).toBe(400);
     });
   });
+  describe("When a POST without a productId is made to /qa/questions", () => {
+    let postResponse: Response;
+    beforeEach(async () => {
+      postResponse = await request(server).post(baseUrl).send({
+        ...validPost,
+        product_id: undefined,
+      });
+    });
+    test("Then the server responds with 400 status code", () => {
+      expect(postResponse.statusCode).toBe(400);
+    });
+  });
 });

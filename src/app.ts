@@ -40,6 +40,7 @@ const App = (
       && req.body.name
       && req.body.body
       && req.body.email
+      && req.body.product_id
     ) {
       const q: question = req.body;
       q.createdAt = dateConstructor();
