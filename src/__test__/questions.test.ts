@@ -152,7 +152,7 @@ describe("Given a blank database", () => {
       expect(postResponse.statusCode).toBe(400);
     });
   });
-  xdescribe("When a POST without an email is made to /qa/questions", () => {
+  describe("When a POST without an email is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
       postResponse = await request(server).post(baseUrl).send({
