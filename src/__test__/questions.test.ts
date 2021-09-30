@@ -140,4 +140,28 @@ describe("Given a blank database", () => {
       expect(postResponse.statusCode).toBe(400);
     });
   });
+  describe("When a POST without a body is made to /qa/questions", () => {
+    let postResponse: Response;
+    beforeEach(async () => {
+      postResponse = await request(server).post(baseUrl).send({
+        ...validPost,
+        body: undefined,
+      });
+    });
+    test("Then the server responds with 400 status code", () => {
+      expect(postResponse.statusCode).toBe(400);
+    });
+  });
+  xdescribe("When a POST without an email is made to /qa/questions", () => {
+    let postResponse: Response;
+    beforeEach(async () => {
+      postResponse = await request(server).post(baseUrl).send({
+        ...validPost,
+        email: undefined,
+      });
+    });
+    test("Then the server responds with 400 status code", () => {
+      expect(postResponse.statusCode).toBe(400);
+    });
+  });
 });
