@@ -57,7 +57,8 @@ const App = (
     const id = Number(req.params.question_id);
     const q = db.getQuestion(id);
     if (q) {
-      res.status(201).send();
+      const answerId = db.saveAnswer(id);
+      res.status(201).send({ answer_id: answerId });
     } else {
       res.status(400).send();
     }

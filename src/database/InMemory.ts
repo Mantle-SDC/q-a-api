@@ -10,7 +10,8 @@ function InMemory(): database {
   } = {
     all: {},
   };
-  let currnetId = 1;
+  let currnetQId = 1;
+  let currentAId = 1;
 
   return {
     saveQuestion: (productId, q) => {
@@ -18,11 +19,16 @@ function InMemory(): database {
       if (!questions[productId]) {
         questions[productId] = [];
       }
-      myQuestion.id = currnetId;
-      currnetId += 1;
+      myQuestion.id = currnetQId;
+      currnetQId += 1;
       questions[productId].push(myQuestion);
       questions.all[myQuestion.id] = myQuestion;
       return myQuestion.id;
+    },
+    saveAnswer: () => {
+      const prevAId = currentAId;
+      currentAId += 1;
+      return prevAId;
     },
     getQuestions: (productId) => questions[productId] || [],
     getQuestion: (questionId) => questions.all[questionId] || null,

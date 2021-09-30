@@ -61,5 +61,8 @@ describe("Givena a server with a valid question", () => {
     test("then the response should have a 201 status code", () => {
       expect(answerPostResponse.statusCode).toBe(201);
     });
+    test("Then the response should contain the id for the answer created", () => {
+      expect(answerPostResponse.body.answer_id).toBe(1);
+    });
   });
 });
