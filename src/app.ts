@@ -7,6 +7,7 @@ import baseUrl from "./urls";
 const App = (
   db: database,
   dateConstructor: () => Date,
+  port: number,
 ): http.Server => {
   const app = express();
 
@@ -52,7 +53,12 @@ const App = (
     next();
   });
 
-  const server = app.listen(8080);
+  app.post(`${baseUrl}/:question_id/answers`, (req, res, next) => {
+    res.status(400).send();
+    next();
+  });
+
+  const server = app.listen(port);
 
   return server;
 };

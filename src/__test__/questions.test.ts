@@ -18,6 +18,7 @@ describe("Given a blank database", () => {
     server = App(
       InMemory(),
       () => new Date(0),
+      8080,
     );
   });
   afterEach(() => {
