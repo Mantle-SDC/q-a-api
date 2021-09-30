@@ -80,6 +80,7 @@ describe("Givena a server with a valid question", () => {
           date: "1970-01-01T00:00:00.000Z",
           answerer_name: "Trevor Settles",
           helpfulness: 0,
+          reported: false, // TODO: take this out
           photos: [],
         });
       });
