@@ -1,18 +1,26 @@
 import { Db, MongoClient } from "mongodb";
 
 const url = "mongodb://localhost:27017";
-const dbPromise = () => new Promise<Db>((resolve, reject) => {
-  MongoClient.connect(url, (err, client) => {
-    if (!client) {
-      reject(err);
-    } else {
-      resolve(client.db("mantle"));
-    }
+
+function MantleDB(): Promise<MongoClient> {
+  return new Promise<MongoClient>((resolve, reject) => {
+    MongoClient.connect(url, (err, client) => {
+      if (!client) {
+        reject(err);
+      } else {
+        resolve(client);
+      }
+    });
   });
-});
+}
 
 (async () => {
-  const db = await dbPromise();
-  db.listCollections().toArray()
-    .then(console.log);
+  const client = await MantleDB();
+  const db = client.db("mantle");
+  const collections = await db.listCollections().toArray();
+  console.log(collections);
+
+  client.close();
 })();
+
+export default MantleDB;
