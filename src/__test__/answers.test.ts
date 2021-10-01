@@ -87,3 +87,44 @@ describe("Givena a server with a valid question", () => {
     });
   });
 });
+
+// mongoimport --type csv -d mantle -c questions --headerline --drop data/questions.csv
+// mongoimport --type csv -d mantle -c answers --headerline --drop data/answers.csv
+// mongoimport --type csv -d mantle -c answers_photos --headerline --drop data/answers_photos.csv
+
+// db.questions.createIndex( { id: 1 } )
+// db.answers.createIndex( { id: 1 } )
+// db.answers_photos.createIndex( { id: 1 } )
+// db.answers_photos.createIndex( { answer_id: 1 } )
+
+/*
+db.questions.updateMany(
+  { id: { $gt: 0 }},
+  {
+    $set: {answers: {}},
+  }
+)
+
+db.answers.updateMany(
+  { id: { $gt: 0 }},
+  {
+    $set: {photos: []},
+  }
+)
+
+db.answers.aggregate([
+  {$lookup:{
+      from: "answers_photos",
+      localField: "id",
+      foreignField: "answer_id",
+      as: "photos"
+    }
+  },
+  {$out: {
+      db: "mantle",
+      coll: "answers_combined"
+    }
+  }
+])
+
+*/
