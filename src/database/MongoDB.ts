@@ -23,6 +23,7 @@ function createMongoDB(url: string): database {
     getQuestions: async (productId: number) => ((await db)
       .collection("questions")
       .find({ product_id: productId })
+      .map((d) => ({ ...d, id: parseInt(d._id, 16) }))
       .toArray()) as Promise<question[]>,
     getQuestion: async (questionId: number) => ((await db)
       .collection("questions")
