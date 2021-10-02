@@ -58,7 +58,7 @@ const App = (
     const questionId = Number(req.params.question_id);
     const q = await db.getQuestion(questionId);
     if (q) {
-      const answerId = db.saveAnswer(questionId, {
+      const answerId = await db.saveAnswer(questionId, {
         body: req.body.body,
         answerer_name: req.body.name,
         photos: req.body.photos,
