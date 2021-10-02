@@ -137,13 +137,12 @@ describe("Given a blank database", () => {
           });
         });
         test("Then the response cotains the questions for the second product", () => {
-          console.log(getResponse.body);
           expect(getResponse.body.results[0].question_id).toBe(otherPostResponse.body.question_id);
         });
       });
     });
   });
-  xdescribe("When a POST without a name is made to /qa/questions", () => {
+  describe("When a POST without a name is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
       postResponse = await request(server).post(baseUrl).send({
