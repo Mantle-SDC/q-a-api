@@ -4,6 +4,7 @@ import { Response } from "superagent";
 import App from "../app";
 import baseUrl from "../urls";
 import InMemory from "../database/InMemory";
+import database from "../database/database";
 
 const validPost = {
   body: "What is this?",
@@ -14,15 +15,21 @@ const validPost = {
 
 describe("Given a blank database", () => {
   let server: http.Server;
-  beforeEach(() => {
-    server = App(
-      InMemory(),
-      () => new Date(0),
-      8080,
-    );
+  let db: database;
+  beforeEach((done) => {
+    db = InMemory();
+    (async () => {
+      server = App(
+        db,
+        () => new Date(0),
+        8080,
+      );
+      done();
+    })();
   });
   afterEach(() => {
     server.close();
+    db.close();
   });
   describe("When a blank POST is made to /qa/questions", () => {
     let postResponse: Response;
