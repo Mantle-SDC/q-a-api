@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import createMongoDB from "./MongoDB";
 
 const url = "mongodb://localhost:27017";

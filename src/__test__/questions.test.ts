@@ -4,7 +4,7 @@ import { Response } from "superagent";
 import App from "../app";
 import baseUrl from "../urls";
 import InMemory from "../database/InMemory";
-import database from "../database/database";
+import Database from "../database/database";
 
 const validPost = {
   body: "What is this?",
@@ -15,7 +15,7 @@ const validPost = {
 
 describe("Given a blank database", () => {
   let server: http.Server;
-  let db: database;
+  let db: Database;
   beforeEach((done) => {
     db = InMemory();
     (async () => {

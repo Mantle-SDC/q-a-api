@@ -1,12 +1,12 @@
-import answer from "../models/answer";
-import question from "../models/question";
+import Answer from "../models/answer";
+import Question from "../models/question";
 import database from "./database";
 
 function InMemory(): database {
   const questions: {
-    [productId: number]: question[],
+    [productId: number]: Question[],
     all: {
-      [questionId: number]: question,
+      [questionId: number]: Question,
     }
   } = {
     all: {},
@@ -16,7 +16,7 @@ function InMemory(): database {
 
   return {
     saveQuestion: (productId, q) => {
-      const myQuestion: question = { ...q };
+      const myQuestion: Question = { ...q };
       if (!questions[productId]) {
         questions[productId] = [];
       }
@@ -29,7 +29,7 @@ function InMemory(): database {
       return Promise.resolve(myQuestion.id);
     },
     saveAnswer: (questionId, a) => {
-      const ans: answer = { ...a };
+      const ans: Answer = { ...a };
       ans.id = currentAId;
       questions.all[questionId].answers[ans.id] = ans;
       currentAId += 1;

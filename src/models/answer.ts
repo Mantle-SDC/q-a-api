@@ -1,4 +1,4 @@
-interface answer {
+interface Answer {
   id?: number,
   body: string,
   "answerer_name": string,
@@ -8,4 +8,4 @@ interface answer {
   photos: string[],
 }
 
-export default answer;
+export default Answer;

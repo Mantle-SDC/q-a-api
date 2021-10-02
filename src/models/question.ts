@@ -1,6 +1,6 @@
-import answer from "./answer";
+import Answer from "./answer";
 
-interface question {
+interface Question {
   id?: number,
   body: string,
   name: string,
@@ -8,8 +8,8 @@ interface question {
   "product_id": number,
   createdAt: Date,
   answers: {
-    [answerId: number]: answer,
+    [answerId: number]: Answer,
   }
 }
 
-export default question;
+export default Question;

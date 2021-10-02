@@ -1,11 +1,11 @@
 import express from "express";
 import http from "http";
-import database from "./database/database";
-import question from "./models/question";
+import Database from "./database/database";
+import Question from "./models/question";
 import baseUrl from "./urls";
 
 const App = (
-  db: database,
+  db: Database,
   dateConstructor: () => Date,
   port: number,
 ): http.Server => {
@@ -43,7 +43,7 @@ const App = (
       && req.body.email
       && req.body.product_id
     ) {
-      const q: question = req.body;
+      const q: Question = req.body;
       q.createdAt = dateConstructor();
       q.answers = {};
       const qID = db.saveQuestion(req.body.product_id, q);
