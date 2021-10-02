@@ -1,13 +1,13 @@
 import answer from "../models/answer";
 import question from "../models/question";
 
-interface Database {
-  saveQuestion: (productId: number, q: question) => Promise<number>,
+interface Database<T> {
   getQuestions: (productId: number) => Promise<question[]>,
-  getQuestion: (questionId: number) => Promise<question | null>,
-  questionExists: (questionId: number) => Promise<boolean>,
+  saveQuestion: (productId: number, q: question) => Promise<T>,
+  getQuestion: (questionId: T) => Promise<question | null>,
+  questionExists: (questionId: T) => Promise<boolean>,
 
-  saveAnswer: (questionId: number, a: answer) => Promise<number>,
+  saveAnswer: (questionId: T, a: answer) => Promise<T>,
 
   close: () => void,
 }

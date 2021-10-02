@@ -15,7 +15,7 @@ function MantleDB(url: string): Promise<MongoClient> {
   });
 }
 
-function createMongoDB(url: string): Database {
+function createMongoDB(url: string): Database<string> {
   const pClient = MantleDB(url);
   const db = pClient
     .then((client) => client.db("mantle"));
@@ -27,7 +27,7 @@ function createMongoDB(url: string): Database {
       .map((d) => ({ ...d, id: parseInt(d._id, 16) }))
       .toArray()) as Promise<question[]>,
 
-    getQuestion: async (questionId: number) => ((await db)
+    getQuestion: async (questionId: string) => ((await db)
       .collection("questions")
       .find({ id: questionId })
       .toArray()
@@ -37,14 +37,14 @@ function createMongoDB(url: string): Database {
     saveQuestion: async (productId: number, q: question) => (await db)
       .collection("questions")
       .insertOne(q)
-      .then((insert) => parseInt(insert.insertedId.toHexString(), 16)),
+      .then((insert) => insert.insertedId.toHexString()),
 
-    questionExists: async (questionId: number) => (await db).collection("questions").indexExists(questionId.toString(16)),
+    questionExists: async (questionId: string) => (await db).collection("questions").indexExists(questionId),
 
-    saveAnswer: async (questionId: number, a: answer) => (await db)
+    saveAnswer: async (questionId: string, a: answer) => (await db)
       .collection("answers")
       .insertOne(a)
-      .then((insert) => parseInt(insert.insertedId.toHexString(), 16)),
+      .then((insert) => insert.insertedId.toHexString()),
 
     close: async () => (await pClient).close(),
   };

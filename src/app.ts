@@ -1,16 +1,16 @@
 import express from "express";
 import http from "http";
 import { MongoServerError } from "mongodb";
-import MongoMemoryServer from "mongodb-memory-server-core";
 import Database from "./database/database";
 import Question from "./models/question";
 import baseUrl from "./urls";
 
-const App = (
-  db: Database,
+function App<T>(
+  db: Database<T>,
   dateConstructor: () => Date,
   port: number,
-): http.Server => {
+  urlParamParser: (id: string) => T,
+): http.Server {
   const app = express();
 
   app.use(express.json());
@@ -62,7 +62,7 @@ const App = (
   });
 
   app.post(`${baseUrl}/:question_id/answers`, async (req, res, next) => {
-    const questionId = Number(req.params.question_id);
+    const questionId = urlParamParser(req.params.question_id);
     try {
       if ((await db.questionExists(questionId))) {
         const answerId = await db.saveAnswer(questionId, {
@@ -92,6 +92,6 @@ const App = (
   const server = app.listen(port);
 
   return server;
-};
+}
 
 export default App;

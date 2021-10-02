@@ -16,7 +16,7 @@ const validPost = {
 
 describe("Given a server with no questions", () => {
   let server: http.Server;
-  let db: Database;
+  let db: Database<string>;
   beforeEach((done) => {
     (async () => {
       const url = (await MongoMemoryServer.create()).getUri();
@@ -25,6 +25,7 @@ describe("Given a server with no questions", () => {
         db,
         () => new Date(0),
         8081,
+        (x) => x,
       );
       done();
     })();
@@ -45,7 +46,7 @@ describe("Given a server with no questions", () => {
 });
 describe("Givena a server with a valid question", () => {
   let server: http.Server;
-  let db: Database;
+  let db: Database<string>;
   let postResponse: Response;
   beforeEach(async () => {
     const url = (await MongoMemoryServer.create()).getUri();
@@ -54,6 +55,7 @@ describe("Givena a server with a valid question", () => {
       db,
       () => new Date(0),
       8082,
+      (x) => x,
     );
     postResponse = await request(server).post(`${baseUrl}`).send({
       body: "What is this?",
@@ -71,7 +73,7 @@ describe("Givena a server with a valid question", () => {
     beforeEach(async () => {
       answerPostResponse = await request(server).post(`${baseUrl}/${postResponse.body.question_id}/answers`).send(validPost);
     });
-    xtest("then the response should have a 201 status code", () => {
+    test("then the response should have a 201 status code", () => {
       expect(answerPostResponse.statusCode).toBe(201);
     });
     xtest("Then the response body should contain the id for the answer created", () => {

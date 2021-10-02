@@ -1,8 +1,8 @@
 import Answer from "../models/answer";
 import Question from "../models/question";
-import database from "./database";
+import Database from "./database";
 
-function InMemory(): database {
+function InMemory(): Database<number> {
   const questions: {
     [productId: number]: Question[],
     all: {

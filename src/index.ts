@@ -5,4 +5,5 @@ App(
   InMemory(),
   () => new Date(),
   8080,
+  (x) => Number(x),
 );

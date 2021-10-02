@@ -16,7 +16,7 @@ const validPost = {
 
 describe("Given a blank database", () => {
   let server: http.Server;
-  let db: Database;
+  let db: Database<string>;
   beforeEach((done) => {
     (async () => {
       const mem = await MongoMemoryServer.create();
@@ -26,6 +26,7 @@ describe("Given a blank database", () => {
         db,
         () => new Date(0),
         8080,
+        (x) => x,
       );
       done();
     })();
