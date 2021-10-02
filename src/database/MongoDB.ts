@@ -1,11 +1,9 @@
-import { Db, MongoClient } from "mongodb";
+import { MongoClient } from "mongodb";
 import answer from "../models/answer";
 import question from "../models/question";
 import database from "./database";
 
-const url = "mongodb://localhost:27017";
-
-function MantleDB(): Promise<MongoClient> {
+function MantleDB(url: string): Promise<MongoClient> {
   return new Promise<MongoClient>((resolve, reject) => {
     MongoClient.connect(url, (err, client) => {
       if (!client) {
@@ -17,8 +15,8 @@ function MantleDB(): Promise<MongoClient> {
   });
 }
 
-function createMongoDB(): database {
-  const pClient = MantleDB();
+function createMongoDB(url: string): database {
+  const pClient = MantleDB(url);
   const db = pClient
     .then((client) => client.db("mantle"));
   return {
@@ -43,16 +41,5 @@ function createMongoDB(): database {
     close: async () => (await pClient).close(),
   };
 }
-
-(async () => {
-  const db = createMongoDB();
-
-  console.time("questions");
-  const questions = await db.getQuestion(5);
-  console.log(questions?.body);
-  console.timeEnd("questions");
-
-  db.close();
-})();
 
 export default createMongoDB;
