@@ -6,6 +6,7 @@ interface database {
   saveAnswer: (questionId: number, a: answer) => Promise<number>,
   getQuestions: (productId: number) => Promise<question[]>,
   getQuestion: (questionId: number) => Promise<question | null>,
+  close: () => void,
 }
 
 export default database;

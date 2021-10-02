@@ -37,6 +37,8 @@ function InMemory(): database {
     },
     getQuestions: (productId) => Promise.resolve(questions[productId] || []),
     getQuestion: (questionId) => Promise.resolve(questions.all[questionId] || null),
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    close: () => {},
   };
 }
 

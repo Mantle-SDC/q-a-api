@@ -23,56 +23,36 @@ function createMongoDB(): database {
     .then((client) => client.db("mantle"));
   return {
     getQuestions: async (productId: number) => ((await db)
-      .collection("questions-comvbined")
+      .collection("questions")
       .find({ product_id: productId })
       .toArray()) as Promise<question[]>,
     getQuestion: async (questionId: number) => ((await db)
-      .collection("questions-comvbined")
+      .collection("questions")
       .find({ id: questionId })
       .toArray()
     )
       .then((docs) => docs[0] as question),
     saveQuestion: async (productId: number, q: question) => (await db)
-      .collection("questions-combined")
+      .collection("questions")
       .insertOne(q)
-      .then((insert) => insert.insertedId),
+      .then((insert) => parseInt(insert.insertedId.toHexString(), 16)),
     saveAnswer: async (questionId: number, a: answer) => (await db)
       .collection("answers")
       .insertOne(a)
-      .then((insert) => insert.insertedId),
+      .then((insert) => parseInt(insert.insertedId.toHexString(), 16)),
+    close: async () => (await pClient).close(),
   };
 }
 
-function getQuestions(db: Db, productId: number) {
-  return db.collection("questions")
-    .find({ product_id: productId })
-    .toArray();
-}
-
-function getQuestion(db: Db, questionId: number) {
-  return db.collection("questions")
-    .find({ id: questionId })
-    .toArray();
-}
-
 (async () => {
-  const client = await MantleDB();
-  const db = client.db("mantle");
+  const db = createMongoDB();
 
-  // const collections = await db.listCollections().toArray();
-  // console.log(collections);
-
-  // const questions = db.collection("questions");
-  // console.log(await questions.aggregate().toArray());
   console.time("questions");
-  await getQuestions(db, 10);
+  const questions = await db.getQuestion(5);
+  console.log(questions?.body);
   console.timeEnd("questions");
 
-  console.time("question");
-  await getQuestion(db, 1004);
-  console.timeEnd("question");
-
-  client.close();
+  db.close();
 })();
 
 export default createMongoDB;
