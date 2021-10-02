@@ -1,5 +1,7 @@
 import express from "express";
 import http from "http";
+import { MongoServerError } from "mongodb";
+import MongoMemoryServer from "mongodb-memory-server-core";
 import Database from "./database/database";
 import Question from "./models/question";
 import baseUrl from "./urls";
@@ -16,19 +18,24 @@ const App = (
 
   app.get(baseUrl, async (req, res, next) => {
     if (req.body.product_id) {
-      const qs = await db.getQuestions(req.body.product_id);
-      res.status(200).send({
-        product_id: req.body.product_id,
-        results: qs.map((q) => ({
-          question_id: q.id,
-          question_body: q.body,
-          question_date: q.createdAt,
-          asker_name: q.name,
-          question_helpfulness: 0,
-          reported: false,
-          answers: q.answers,
-        })),
-      });
+      try {
+        const qs = await db.getQuestions(req.body.product_id);
+        res.status(200).send({
+          product_id: req.body.product_id,
+          results: qs.map((q) => ({
+            question_id: q.id,
+            question_body: q.body,
+            question_date: q.createdAt,
+            asker_name: q.name,
+            question_helpfulness: 0,
+            reported: false,
+            answers: q.answers,
+          })),
+        });
+      } catch (e) {
+        res.status(500).send();
+        console.error(e);
+      }
     } else {
       res.status(400).send();
     }
@@ -56,21 +63,30 @@ const App = (
 
   app.post(`${baseUrl}/:question_id/answers`, async (req, res, next) => {
     const questionId = Number(req.params.question_id);
-    const q = await db.getQuestion(questionId);
-    if (q) {
-      const answerId = await db.saveAnswer(questionId, {
-        body: req.body.body,
-        answerer_name: req.body.name,
-        photos: req.body.photos,
-        helpfulness: 0,
-        date: dateConstructor(),
-        reported: false,
-      });
-      res.status(201).send({ answer_id: answerId });
-    } else {
-      res.status(400).send();
+    try {
+      if ((await db.questionExists(questionId))) {
+        const answerId = await db.saveAnswer(questionId, {
+          body: req.body.body,
+          answerer_name: req.body.name,
+          photos: req.body.photos,
+          helpfulness: 0,
+          date: dateConstructor(),
+          reported: false,
+        });
+        res.status(201).send({ answer_id: answerId });
+      } else {
+        res.status(400).send();
+      }
+      next();
+    } catch (e) {
+      if (e instanceof MongoServerError && e.codeName === "NamespaceNotFound") {
+        res.status(400).send();
+      } else {
+        res.status(500).send();
+        console.error(e);
+      }
+      next();
     }
-    next();
   });
 
   const server = app.listen(port);
