@@ -44,7 +44,7 @@ describe("Given a blank database", () => {
       expect(postResponse.statusCode).toBe(400);
     });
   });
-  xdescribe("When a blank GET is made to /qa/questions", () => {
+  describe("When a blank GET is made to /qa/questions", () => {
     let getResponse: Response;
     beforeEach(async () => {
       getResponse = await request(server).get(baseUrl).send({});
@@ -53,7 +53,7 @@ describe("Given a blank database", () => {
       expect(getResponse.statusCode).toBe(400);
     });
   });
-  xdescribe("When a valid GET is made to /qa/questions", () => {
+  describe("When a valid GET is made to /qa/questions", () => {
     let getResponse: Response;
     beforeEach(async () => {
       getResponse = await request(server).get(baseUrl).send({
