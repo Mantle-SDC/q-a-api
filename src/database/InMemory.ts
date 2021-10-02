@@ -26,17 +26,17 @@ function InMemory(): database {
       questions[productId].push(myQuestion);
       questions.all[myQuestion.id] = myQuestion;
 
-      return myQuestion.id;
+      return Promise.resolve(myQuestion.id);
     },
     saveAnswer: (questionId, a) => {
       const ans: answer = { ...a };
       ans.id = currentAId;
       questions.all[questionId].answers[ans.id] = ans;
       currentAId += 1;
-      return ans.id;
+      return Promise.resolve(ans.id);
     },
-    getQuestions: (productId) => questions[productId] || [],
-    getQuestion: (questionId) => questions.all[questionId] || null,
+    getQuestions: (productId) => Promise.resolve(questions[productId] || []),
+    getQuestion: (questionId) => Promise.resolve(questions.all[questionId] || null),
   };
 }
 

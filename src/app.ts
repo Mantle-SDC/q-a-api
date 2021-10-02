@@ -14,9 +14,9 @@ const App = (
   app.use(express.json());
   app.use(express.urlencoded());
 
-  app.get(baseUrl, (req, res, next) => {
+  app.get(baseUrl, async (req, res, next) => {
     if (req.body.product_id) {
-      const qs = db.getQuestions(req.body.product_id);
+      const qs = await db.getQuestions(req.body.product_id);
       res.status(200).send({
         product_id: req.body.product_id,
         results: qs.map((q) => ({
@@ -54,9 +54,9 @@ const App = (
     next();
   });
 
-  app.post(`${baseUrl}/:question_id/answers`, (req, res, next) => {
+  app.post(`${baseUrl}/:question_id/answers`, async (req, res, next) => {
     const questionId = Number(req.params.question_id);
-    const q = db.getQuestion(questionId);
+    const q = await db.getQuestion(questionId);
     if (q) {
       const answerId = db.saveAnswer(questionId, {
         body: req.body.body,
