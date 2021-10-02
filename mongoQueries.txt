@@ -99,3 +99,20 @@ db.answers_combined.updateMany(
 )
 
 db.answers_combined.updateMany( {}, { $rename: { "helpful": "helpfulness" } } )
+
+db.questions.aggregate([
+  {$lookup:{
+      from: "answers_combined",
+      localField: "id",
+      foreignField: "question_id",
+      as: "answers_combined"
+    }
+  },
+  {$out: {
+      db: "mantle",
+      coll: "questions_combined"
+    }
+  }
+])
+
+db.questions_combined.createIndex( { id: 1 } )
