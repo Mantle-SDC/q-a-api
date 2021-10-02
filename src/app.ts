@@ -35,7 +35,7 @@ const App = (
     next();
   });
 
-  app.post(baseUrl, (req, res, next) => {
+  app.post(baseUrl, async (req, res, next) => {
     if (
       Object.keys(req.body).length
       && req.body.name
@@ -46,7 +46,7 @@ const App = (
       const q: Question = req.body;
       q.createdAt = dateConstructor();
       q.answers = {};
-      const qID = db.saveQuestion(req.body.product_id, q);
+      const qID = await db.saveQuestion(req.body.product_id, q);
       res.status(201).send({ question_id: qID });
     } else {
       res.status(400).send();
