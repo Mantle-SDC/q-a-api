@@ -84,7 +84,7 @@ describe("Given a blank database", () => {
       expect(postResponse.statusCode).toBe(201);
     });
     test("then the response should contain the id of the question created", () => {
-      expect(typeof postResponse.body.question_id).toBe(typeof 1);
+      expect(typeof postResponse.body.question_id).toBeTruthy();
     });
     describe("And a valid GET is made to /qa/questions", () => {
       let getResponse: Response;
@@ -106,7 +106,7 @@ describe("Given a blank database", () => {
         expect(result).toHaveProperty("reported", false);
         expect(result.answers).toEqual({});
 
-        expect(typeof result.question_id).toBe(typeof 1);
+        expect(typeof result.question_id).toBeTruthy();
       });
     });
     describe("When a valid POST is made to /qa/questions with a different product_id", () => {

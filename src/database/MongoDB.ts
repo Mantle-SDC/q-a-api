@@ -24,7 +24,7 @@ function createMongoDB(url: string): Database<string> {
       .collection("questions")
       .find({ product_id: productId })
       // eslint-disable-next-line no-underscore-dangle
-      .map((d) => ({ ...d, id: parseInt(d._id, 16) }))
+      .map((d) => ({ ...d, id: d._id }))
       .toArray()) as Promise<question[]>,
 
     getQuestion: async (questionId: string) => ((await db)
@@ -39,7 +39,9 @@ function createMongoDB(url: string): Database<string> {
       .insertOne(q)
       .then((insert) => insert.insertedId.toHexString()),
 
-    questionExists: async (questionId: string) => (await db).collection("questions").indexExists(questionId),
+    questionExists: async (questionId: string) => (await db)
+      .collection("questions")
+      .indexExists(questionId),
 
     saveAnswer: async (questionId: string, a: answer) => (await db)
       .collection("answers")
