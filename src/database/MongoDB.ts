@@ -14,11 +14,15 @@ function MantleDB(): Promise<MongoClient> {
   });
 }
 
-function getQuestions(db: Db, productId: number, page: number, count: number) {
+function getQuestions(db: Db, productId: number) {
   return db.collection("questions")
-    .find({})
-    .skip(page * count)
-    .limit(count)
+    .find({ product_id: productId })
+    .toArray();
+}
+
+function getQuestion(db: Db, questionId: number) {
+  return db.collection("questions")
+    .find({ id: questionId })
     .toArray();
 }
 
@@ -32,8 +36,12 @@ function getQuestions(db: Db, productId: number, page: number, count: number) {
   // const questions = db.collection("questions");
   // console.log(await questions.aggregate().toArray());
   console.time("questions");
-  console.log(await getQuestions(db, 1, 2000, 5));
+  await getQuestions(db, 10);
   console.timeEnd("questions");
+
+  console.time("question");
+  await getQuestion(db, 1004);
+  console.timeEnd("question");
 
   client.close();
 })();
