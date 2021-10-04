@@ -1,6 +1,6 @@
 import { ObjectId, MongoClient } from "mongodb";
-import answer from "../models/answer";
-import question from "../models/question";
+import Answer from "../models/answer";
+import Question from "../models/question";
 import Database from "./database";
 
 function MantleDB(url: string): Promise<MongoClient> {
@@ -19,27 +19,27 @@ function createMongoDB(url: string): Database<string> {
   const pClient = MantleDB(url);
   const db = pClient
     .then((client) => client.db("mantle"));
-  return {
+
+  const result: Database<string> = {
     getQuestions: async (productId: number) => ((await db)
       .collection("questions")
       .find({ product_id: productId })
       // eslint-disable-next-line no-underscore-dangle
       .map((d) => ({ ...d, id: d._id }))
-      .toArray()) as Promise<question[]>,
+      .toArray()) as Promise<Question<string>[]>,
 
     getQuestion: async (questionId: string) => ((await db)
       .collection("questions")
       .find({ id: questionId })
       .toArray()
     )
-      .then((docs) => docs[0] as question),
+      .then((docs) => docs[0] as Question<string>),
 
-    saveQuestion: async (productId: number, q: question) => (await db)
+    saveQuestion: async (productId: number, q: Question<string>) => (await db)
       .collection("questions")
       .insertOne(q)
       .then((insert) => insert.insertedId.toHexString()),
 
-    // TODO fix this method
     questionExists: async (questionId: string) => {
       if (!questionId.match(/^[0-9a-f]{24}$/)) {
         return Promise.resolve(false);
@@ -50,13 +50,25 @@ function createMongoDB(url: string): Database<string> {
         .then((d) => !!d);
     },
 
-    saveAnswer: async (questionId: string, a: answer) => (await db)
-      .collection("answers")
-      .insertOne(a)
-      .then((insert) => insert.insertedId.toHexString()),
+    saveAnswer: async (questionId: string, a: Answer<string>) => {
+      const answerID = (await (await db)
+        .collection("answers")
+        .insertOne(a)).insertedId;
+
+      await (await db)
+        .collection("questions")
+        .updateOne(
+          { _id: new ObjectId(questionId) },
+          { $push: { answers: answerID } },
+        );
+
+      return answerID.toHexString();
+    },
 
     close: async () => (await pClient).close(),
   };
+
+  return result;
 }
 
 export default createMongoDB;

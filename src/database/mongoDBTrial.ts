@@ -12,7 +12,7 @@ const url = "mongodb://localhost:27017";
     email: "trevor@settles.com",
     product_id: 1,
     createdAt: new Date(),
-    answers: {},
+    answers: [],
   });
   console.log(questionID);
 

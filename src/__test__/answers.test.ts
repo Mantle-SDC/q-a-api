@@ -79,7 +79,7 @@ describe("Givena a server with a valid question", () => {
     test("Then the response body should contain the id for the answer created", () => {
       expect(answerPostResponse.body.answer_id).toBeTruthy();
     });
-    xdescribe("And when a GET is made for that productId", () => {
+    describe("And when a GET is made for that productId", () => {
       let getResponse: Response;
       beforeEach(async () => {
         getResponse = await request(server).get(baseUrl).send({
@@ -87,7 +87,7 @@ describe("Givena a server with a valid question", () => {
         });
       });
       test("Then that answer is in the response", () => {
-        const aId = answerPostResponse.body.answer_id;
+        const aId: string = answerPostResponse.body.answer_id;
         const { answers } = getResponse.body.results[0];
         expect(answers[aId]).toEqual({
           id: aId,
@@ -95,7 +95,6 @@ describe("Givena a server with a valid question", () => {
           date: "1970-01-01T00:00:00.000Z",
           answerer_name: "Trevor Settles",
           helpfulness: 0,
-          reported: false, // TODO: take this out
           photos: [],
         });
       });

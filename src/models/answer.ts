@@ -1,5 +1,5 @@
-interface Answer {
-  id?: number,
+interface Answer<T> {
+  id?: T,
   body: string,
   "answerer_name": string,
   helpfulness: number,

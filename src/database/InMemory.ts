@@ -4,9 +4,9 @@ import Database from "./database";
 
 function InMemory(): Database<number> {
   const questions: {
-    [productId: number]: Question[],
+    [productId: number]: Question<number>[],
     all: {
-      [questionId: number]: Question,
+      [questionId: number]: Question<number>,
     }
   } = {
     all: {},
@@ -16,7 +16,7 @@ function InMemory(): Database<number> {
 
   return {
     saveQuestion: (productId, q) => {
-      const myQuestion: Question = { ...q };
+      const myQuestion: Question<number> = { ...q };
       if (!questions[productId]) {
         questions[productId] = [];
       }
@@ -29,7 +29,7 @@ function InMemory(): Database<number> {
       return Promise.resolve(myQuestion.id);
     },
     saveAnswer: (questionId, a) => {
-      const ans: Answer = { ...a };
+      const ans: Answer<number> = { ...a };
       ans.id = currentAId;
       questions.all[questionId].answers[ans.id] = ans;
       currentAId += 1;

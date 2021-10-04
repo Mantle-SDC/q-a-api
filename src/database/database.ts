@@ -1,13 +1,13 @@
-import answer from "../models/answer";
-import question from "../models/question";
+import Answer from "../models/answer";
+import Question from "../models/question";
 
-interface Database<T> {
-  getQuestions: (productId: number) => Promise<question[]>,
-  saveQuestion: (productId: number, q: question) => Promise<T>,
-  getQuestion: (questionId: T) => Promise<question | null>,
+interface Database<T extends string | number> {
+  getQuestions: (productId: number) => Promise<Question<T>[]>,
+  saveQuestion: (productId: number, q: Question<T>) => Promise<T>,
+  getQuestion: (questionId: T) => Promise<Question<T> | null>,
   questionExists: (questionId: T) => Promise<boolean>,
 
-  saveAnswer: (questionId: T, a: answer) => Promise<T>,
+  saveAnswer: (questionId: T, a: Answer<T>) => Promise<T>,
 
   close: () => void,
 }

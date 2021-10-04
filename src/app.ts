@@ -2,10 +2,11 @@ import express from "express";
 import http from "http";
 import { MongoServerError } from "mongodb";
 import Database from "./database/database";
+import Answer from "./models/answer";
 import Question from "./models/question";
 import baseUrl from "./urls";
 
-function App<T>(
+function App<T extends number | string>(
   db: Database<T>,
   dateConstructor: () => Date,
   port: number,
@@ -29,7 +30,14 @@ function App<T>(
             asker_name: q.name,
             question_helpfulness: 0,
             reported: false,
-            answers: q.answers,
+            answers: q.answers.reduce((acc: Record<string, unknown>, input: Answer<T>) => {
+              if (input.id !== undefined) {
+                const k = { ...acc };
+                k[input.id] = input;
+                return k;
+              }
+              return acc;
+            }, {}),
           })),
         });
       } catch (e) {
@@ -50,9 +58,9 @@ function App<T>(
       && req.body.email
       && req.body.product_id
     ) {
-      const q: Question = req.body;
+      const q: Question<T> = req.body;
       q.createdAt = dateConstructor();
-      q.answers = {};
+      q.answers = [];
       const qID = await db.saveQuestion(req.body.product_id, q);
       res.status(201).send({ question_id: qID });
     } else {
