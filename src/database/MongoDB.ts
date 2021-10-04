@@ -40,10 +40,15 @@ function createMongoDB(url: string): Database<string> {
       .then((insert) => insert.insertedId.toHexString()),
 
     // TODO fix this method
-    questionExists: async (questionId: string) => (await db)
-      .collection("questions")
-      .findOne({ _id: new ObjectId(questionId) })
-      .then((d) => !!d),
+    questionExists: async (questionId: string) => {
+      if (!questionId.match(/^[0-9a-f]{24}$/)) {
+        return Promise.resolve(false);
+      }
+      return (await db)
+        .collection("questions")
+        .findOne({ _id: new ObjectId(questionId) })
+        .then((d) => !!d);
+    },
 
     saveAnswer: async (questionId: string, a: answer) => (await db)
       .collection("answers")

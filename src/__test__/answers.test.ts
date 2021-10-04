@@ -65,8 +65,8 @@ describe("Givena a server with a valid question", () => {
     });
   });
   afterEach(() => {
-    server.close();
     db.close();
+    server.close();
   });
   describe("When a valid POST is made to /qa/questions/:question_id/answers", () => {
     let answerPostResponse: Response;

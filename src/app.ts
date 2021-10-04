@@ -54,7 +54,6 @@ function App<T>(
       q.createdAt = dateConstructor();
       q.answers = {};
       const qID = await db.saveQuestion(req.body.product_id, q);
-      console.log("created: ", qID);
       res.status(201).send({ question_id: qID });
     } else {
       res.status(400).send();
@@ -66,8 +65,8 @@ function App<T>(
     const questionId = urlIdParser(req.params.question_id);
     try {
       const doesExist = (await db.questionExists(questionId));
-      console.log("checking:", questionId);
-      console.log("does exist", doesExist);
+      // console.log("checking:", questionId);
+      // console.log("does exist", doesExist);
       if (doesExist) {
         const answerId = await db.saveAnswer(questionId, {
           body: req.body.body,
