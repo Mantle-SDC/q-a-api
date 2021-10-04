@@ -68,19 +68,19 @@ function App<T>(
       const doesExist = (await db.questionExists(questionId));
       console.log("checking:", questionId);
       console.log("does exist", doesExist);
-      // if (doesExist) {
-      const answerId = await db.saveAnswer(questionId, {
-        body: req.body.body,
-        answerer_name: req.body.name,
-        photos: req.body.photos,
-        helpfulness: 0,
-        date: dateConstructor(),
-        reported: false,
-      });
-      res.status(201).send({ answer_id: answerId });
-      // } else {
-      //   res.status(400).send();
-      // }
+      if (doesExist) {
+        const answerId = await db.saveAnswer(questionId, {
+          body: req.body.body,
+          answerer_name: req.body.name,
+          photos: req.body.photos,
+          helpfulness: 0,
+          date: dateConstructor(),
+          reported: false,
+        });
+        res.status(201).send({ answer_id: answerId });
+      } else {
+        res.status(400).send();
+      }
       next();
     } catch (e) {
       if (e instanceof MongoServerError && e.codeName === "NamespaceNotFound") {

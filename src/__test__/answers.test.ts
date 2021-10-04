@@ -79,7 +79,7 @@ describe("Givena a server with a valid question", () => {
     test("Then the response body should contain the id for the answer created", () => {
       expect(answerPostResponse.body.answer_id).toBeTruthy();
     });
-    describe("And when a GET is made for that productId", () => {
+    xdescribe("And when a GET is made for that productId", () => {
       let getResponse: Response;
       beforeEach(async () => {
         getResponse = await request(server).get(baseUrl).send({

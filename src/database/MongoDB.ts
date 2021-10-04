@@ -42,7 +42,8 @@ function createMongoDB(url: string): Database<string> {
     // TODO fix this method
     questionExists: async (questionId: string) => (await db)
       .collection("questions")
-      .indexExists(questionId),
+      .findOne({ _id: new ObjectId(questionId) })
+      .then((d) => !!d),
 
     saveAnswer: async (questionId: string, a: answer) => (await db)
       .collection("answers")
