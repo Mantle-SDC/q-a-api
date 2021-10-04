@@ -76,10 +76,10 @@ describe("Givena a server with a valid question", () => {
     test("then the response should have a 201 status code", () => {
       expect(answerPostResponse.statusCode).toBe(201);
     });
-    xtest("Then the response body should contain the id for the answer created", () => {
-      expect(answerPostResponse.body.answer_id).toBe(1);
+    test("Then the response body should contain the id for the answer created", () => {
+      expect(answerPostResponse.body.answer_id).toBeTruthy();
     });
-    xdescribe("And when a GET is made for that productId", () => {
+    describe("And when a GET is made for that productId", () => {
       let getResponse: Response;
       beforeEach(async () => {
         getResponse = await request(server).get(baseUrl).send({

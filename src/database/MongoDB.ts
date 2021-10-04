@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { ObjectId, MongoClient } from "mongodb";
 import answer from "../models/answer";
 import question from "../models/question";
 import Database from "./database";
@@ -39,6 +39,7 @@ function createMongoDB(url: string): Database<string> {
       .insertOne(q)
       .then((insert) => insert.insertedId.toHexString()),
 
+    // TODO fix this method
     questionExists: async (questionId: string) => (await db)
       .collection("questions")
       .indexExists(questionId),

@@ -9,7 +9,7 @@ function App<T>(
   db: Database<T>,
   dateConstructor: () => Date,
   port: number,
-  urlParamParser: (id: string) => T,
+  urlIdParser: (id: string) => T,
 ): http.Server {
   const app = express();
 
@@ -54,6 +54,7 @@ function App<T>(
       q.createdAt = dateConstructor();
       q.answers = {};
       const qID = await db.saveQuestion(req.body.product_id, q);
+      console.log("created: ", qID);
       res.status(201).send({ question_id: qID });
     } else {
       res.status(400).send();
@@ -62,21 +63,24 @@ function App<T>(
   });
 
   app.post(`${baseUrl}/:question_id/answers`, async (req, res, next) => {
-    const questionId = urlParamParser(req.params.question_id);
+    const questionId = urlIdParser(req.params.question_id);
     try {
-      if ((await db.questionExists(questionId))) {
-        const answerId = await db.saveAnswer(questionId, {
-          body: req.body.body,
-          answerer_name: req.body.name,
-          photos: req.body.photos,
-          helpfulness: 0,
-          date: dateConstructor(),
-          reported: false,
-        });
-        res.status(201).send({ answer_id: answerId });
-      } else {
-        res.status(400).send();
-      }
+      const doesExist = (await db.questionExists(questionId));
+      console.log("checking:", questionId);
+      console.log("does exist", doesExist);
+      // if (doesExist) {
+      const answerId = await db.saveAnswer(questionId, {
+        body: req.body.body,
+        answerer_name: req.body.name,
+        photos: req.body.photos,
+        helpfulness: 0,
+        date: dateConstructor(),
+        reported: false,
+      });
+      res.status(201).send({ answer_id: answerId });
+      // } else {
+      //   res.status(400).send();
+      // }
       next();
     } catch (e) {
       if (e instanceof MongoServerError && e.codeName === "NamespaceNotFound") {
