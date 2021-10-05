@@ -24,8 +24,17 @@ function createMongoDB(url: string): Database<string> {
     getQuestions: async (productId: number) => ((await db)
       .collection("questions")
       .find({ product_id: productId })
-      // eslint-disable-next-line no-underscore-dangle
-      .map((d) => ({ ...d, id: d._id }))
+      .map((d) => ({
+        ...d,
+        // eslint-disable-next-line no-underscore-dangle
+        id: d._id,
+        answers: d.answers?.map((answer: Record<string, unknown>) => ({
+          ...answer,
+          // eslint-disable-next-line no-underscore-dangle
+          id: answer._id,
+          reported: null,
+        })) || [],
+      }))
       .toArray()) as Promise<Question<string>[]>,
 
     getQuestion: async (questionId: string) => ((await db)
