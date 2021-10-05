@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Mantle-SDC/q-a-api#readme",
   "dependencies": {
+    "@types/mongoose": "^5.11.97",
     "axios": "^0.21.4",
     "express": "^4.17.1",
     "mongodb": "^4.1.2",

@@ -89,7 +89,7 @@ describe("Givena a server with a valid question", () => {
       test("Then that answer is in the response", () => {
         const aId: string = answerPostResponse.body.answer_id;
         const { answers } = getResponse.body.results[0];
-        expect(answers[aId]).toEqual({
+        expect(answers[0]).toEqual({
           id: aId,
           body: "its pretty great",
           date: "1970-01-01T00:00:00.000Z",
