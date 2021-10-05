@@ -1,9 +1,9 @@
 import App from "./app";
-import InMemory from "./database/InMemory";
+import createMongoDB from "./database/MongoDB";
 
 App(
-  InMemory(),
+  createMongoDB("mongodb://localhost:27017"),
   () => new Date(),
   8080,
-  (x) => Number(x),
+  (x) => x,
 );
