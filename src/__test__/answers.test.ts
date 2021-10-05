@@ -86,7 +86,7 @@ describe("Givena a server with a valid question", () => {
           product_id: 1,
         });
       });
-      xtest("Then that answer is in the response", () => {
+      test("Then that answer is in the response", () => {
         const aId: string = answerPostResponse.body.answer_id;
         const { answers } = getResponse.body.results[0];
         expect(answers[0]).toEqual({

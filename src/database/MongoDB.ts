@@ -59,7 +59,7 @@ function createMongoDB(url: string): Database<string> {
         .collection("questions")
         .updateOne(
           { _id: new ObjectId(questionId) },
-          { $push: { answers: answerID } },
+          { $push: { answers: a } },
         );
 
       return answerID.toHexString();

@@ -2,7 +2,6 @@ import express from "express";
 import http from "http";
 import { MongoServerError } from "mongodb";
 import Database from "./database/database";
-import Answer from "./models/answer";
 import Question from "./models/question";
 import baseUrl from "./urls";
 
