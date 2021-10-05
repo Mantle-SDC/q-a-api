@@ -104,7 +104,7 @@ describe("Given a blank database", () => {
         expect(result).toHaveProperty("asker_name", "Trevor Settles");
         expect(result.question_helpfulness).toBe(0);
         expect(result).toHaveProperty("reported", false);
-        expect(result.answers).toEqual({});
+        expect(result.answers).toEqual([]);
 
         expect(typeof result.question_id).toBeTruthy();
       });

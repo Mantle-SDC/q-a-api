@@ -30,14 +30,7 @@ function App<T extends number | string>(
             asker_name: q.name,
             question_helpfulness: 0,
             reported: false,
-            answers: q.answers.reduce((acc: Record<string, unknown>, input: Answer<T>) => {
-              if (input.id !== undefined) {
-                const k = { ...acc };
-                k[input.id] = input;
-                return k;
-              }
-              return acc;
-            }, {}),
+            answers: q.answers,
           })),
         });
       } catch (e) {
