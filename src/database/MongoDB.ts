@@ -29,13 +29,16 @@ function createMongoDB(url: string): Database<string> {
         // eslint-disable-next-line no-underscore-dangle
         id: d._id,
         answers: d.answers?.map((answer: Record<string, unknown>) => ({
-          ...answer,
           // eslint-disable-next-line no-underscore-dangle
           id: answer._id,
-          reported: null,
+          answerer_name: answer.answerer_name,
+          body: answer.body,
+          date: answer.date,
+          helpfulness: answer.helpfulness,
+          photos: answer.photos,
         })) || [],
       }))
-      .toArray()) as Promise<Question<string>[]>,
+      .toArray()) as Promise < Question < string > [] >,
 
     getQuestion: async (questionId: string) => ((await db)
       .collection("questions")
@@ -44,40 +47,40 @@ function createMongoDB(url: string): Database<string> {
     )
       .then((docs) => docs[0] as Question<string>),
 
-    saveQuestion: async (productId: number, q: Question<string>) => (await db)
-      .collection("questions")
-      .insertOne(q)
-      .then((insert) => insert.insertedId.toHexString()),
-
-    questionExists: async (questionId: string) => {
-      if (!questionId.match(/^[0-9a-f]{24}$/)) {
-        return Promise.resolve(false);
-      }
-      return (await db)
+      saveQuestion: async (productId: number, q: Question<string>) => (await db)
         .collection("questions")
-        .findOne({ _id: new ObjectId(questionId) })
-        .then((d) => !!d);
-    },
+        .insertOne(q)
+        .then((insert) => insert.insertedId.toHexString()),
 
-    saveAnswer: async (questionId: string, a: Answer<string>) => {
-      const answerID = (await (await db)
-        .collection("answers")
-        .insertOne(a)).insertedId;
+        questionExists: async (questionId: string) => {
+          if (!questionId.match(/^[0-9a-f]{24}$/)) {
+            return Promise.resolve(false);
+          }
+          return (await db)
+            .collection("questions")
+            .findOne({ _id: new ObjectId(questionId) })
+            .then((d) => !!d);
+        },
 
-      await (await db)
-        .collection("questions")
-        .updateOne(
-          { _id: new ObjectId(questionId) },
-          { $push: { answers: a } },
-        );
+          saveAnswer: async (questionId: string, a: Answer<string>) => {
+            const answerID = (await (await db)
+              .collection("answers")
+              .insertOne(a)).insertedId;
 
-      return answerID.toHexString();
-    },
+            await (await db)
+              .collection("questions")
+              .updateOne(
+                { _id: new ObjectId(questionId) },
+                { $push: { answers: a } },
+              );
 
-    close: async () => (await pClient).close(),
+            return answerID.toHexString();
+          },
+
+            close: async () => (await pClient).close(),
   };
 
-  return result;
+return result;
 }
 
 export default createMongoDB;
