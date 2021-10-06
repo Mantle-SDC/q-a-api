@@ -1,29 +1,29 @@
-mongoimport --type csv -d mantle -c questions --headerline --drop data/questions.csv
-mongoimport --type csv -d mantle -c answers --headerline --drop data/answers.csv
-mongoimport --type csv -d mantle -c answers_photos --headerline --drop data/answers_photos.csv
+mongoimport --type csv -d mantle -c questions_in --headerline --drop data/questions.csv
+mongoimport --type csv -d mantle -c answers_in --headerline --drop data/answers.csv
+mongoimport --type csv -d mantle -c answers_photos_in --headerline --drop data/answers_photos.csv
 
-db.questions.createIndex( { id: 1 } )
-db.answers.createIndex( { id: 1 } )
-db.answers_photos.createIndex( { id: 1 } )
-db.answers_photos.createIndex( { answer_id: 1 } )
+db.questions_in.createIndex( { id: 1 } )
+db.answers_in.createIndex( { id: 1 } )
+db.answers_photos_in.createIndex( { id: 1 } )
+db.answers_photos_in.createIndex( { answer_id: 1 } )
 
-db.questions.updateMany(
+db.questions_in.updateMany(
   { id: { $gt: 0 }},
   {
-    $set: {answers: {}},
+    $set: {answers: []},
   }
 )
 
-db.answers.updateMany(
+db.answers_in.updateMany(
   { id: { $gt: 0 }},
   {
     $set: {photos: []},
   }
 )
 
-db.answers.aggregate([
+db.answers_in.aggregate([
   {$lookup:{
-      from: "answers_photos",
+      from: "answers_photos_in",
       localField: "id",
       foreignField: "answer_id",
       as: "photos"
@@ -116,3 +116,46 @@ db.questions.aggregate([
 ])
 
 db.questions_combined.createIndex( { id: 1 } )
+
+db.answers_combined.updateMany(
+  {},
+  [
+    {$addFields: {
+      "reported": {$toBool: "$reported_in"}
+      }
+    }
+  ]
+)
+
+db.answers_combined.updateMany(
+  {},
+  [
+    {
+      $unset: "reported_in",
+    }
+  ]
+)
+
+db.answers_combined.updateMany(
+  {},
+  [
+    {
+      $unset: "answerer_email",
+    }
+  ]
+)
+
+db.questions_in.aggregate([
+  {$lookup:{
+      from: "answers_combined",
+      localField: "id",
+      foreignField: "question_id",
+      as: "answers_combined"
+    }
+  },
+  {$out: {
+      db: "mantle",
+      coll: "questions_combined"
+    }
+  }
+])

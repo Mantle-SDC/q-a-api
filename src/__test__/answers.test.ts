@@ -37,7 +37,7 @@ describe("Given a server with no questions", () => {
   describe("When an otherwise valid POST is sent", () => {
     let postResponse: Response;
     beforeEach(async () => {
-      postResponse = await request(server).post(`${baseUrl}/1/answers`).send(validPost);
+      postResponse = await request(server).post(`${baseUrl}/1/answers`).query(validPost);
     });
     test("Then the server should respond with 400", () => {
       expect(postResponse.statusCode).toBe(400);
@@ -57,7 +57,7 @@ describe("Givena a server with a valid question", () => {
       8082,
       (x) => x,
     );
-    postResponse = await request(server).post(`${baseUrl}`).send({
+    postResponse = await request(server).post(`${baseUrl}`).query({
       body: "What is this?",
       name: "Trevor Settles",
       email: "email@gmail.com",
@@ -71,7 +71,7 @@ describe("Givena a server with a valid question", () => {
   describe("When a valid POST is made to /qa/questions/:question_id/answers", () => {
     let answerPostResponse: Response;
     beforeEach(async () => {
-      answerPostResponse = await request(server).post(`${baseUrl}/${postResponse.body.question_id}/answers`).send(validPost);
+      answerPostResponse = await request(server).post(`${baseUrl}/${postResponse.body.question_id}/answers`).query(validPost);
     });
     test("then the response should have a 201 status code", () => {
       expect(answerPostResponse.statusCode).toBe(201);
@@ -82,7 +82,7 @@ describe("Givena a server with a valid question", () => {
     describe("And when a GET is made for that productId", () => {
       let getResponse: Response;
       beforeEach(async () => {
-        getResponse = await request(server).get(baseUrl).send({
+        getResponse = await request(server).get(baseUrl).query({
           product_id: 1,
         });
       });

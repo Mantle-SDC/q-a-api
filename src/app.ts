@@ -16,12 +16,17 @@ function App<T extends number | string>(
   app.use(express.json());
   app.use(express.urlencoded());
 
+  app.use((req, res, next) => {
+    console.log(`got ${req.method} on ${req.url} with`, req.body);
+    next();
+  });
+
   app.get(baseUrl, async (req, res, next) => {
-    if (req.body.product_id) {
+    if (req.query.product_id) {
       try {
-        const qs = await db.getQuestions(req.body.product_id);
+        const qs = await db.getQuestions(req.query.product_id);
         res.status(200).send({
-          product_id: req.body.product_id,
+          product_id: req.query.product_id,
           results: qs.map((q) => ({
             question_id: q.id,
             question_body: q.body,
@@ -44,16 +49,16 @@ function App<T extends number | string>(
 
   app.post(baseUrl, async (req, res, next) => {
     if (
-      Object.keys(req.body).length
-      && req.body.name
-      && req.body.body
-      && req.body.email
-      && req.body.product_id
+      Object.keys(req.query).length
+      && req.query.name
+      && req.query.body
+      && req.query.email
+      && req.query.product_id
     ) {
-      const q: Question<T> = req.body;
+      const q: Question<T> = req.query;
       q.createdAt = dateConstructor();
       q.answers = [];
-      const qID = await db.saveQuestion(req.body.product_id, q);
+      const qID = await db.saveQuestion(req.query.product_id, q);
       res.status(201).send({ question_id: qID });
     } else {
       res.status(400).send();
@@ -69,9 +74,9 @@ function App<T extends number | string>(
       // console.log("does exist", doesExist);
       if (doesExist) {
         const answerId = await db.saveAnswer(questionId, {
-          body: req.body.body,
-          answerer_name: req.body.name,
-          photos: req.body.photos,
+          body: req.query.body,
+          answerer_name: req.query.name,
+          photos: req.query.photos,
           helpfulness: 0,
           date: dateConstructor(),
           reported: false,

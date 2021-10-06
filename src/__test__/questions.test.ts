@@ -38,7 +38,7 @@ describe("Given a blank database", () => {
   describe("When a blank POST is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
-      postResponse = await request(server).post(baseUrl).send({});
+      postResponse = await request(server).post(baseUrl).query({});
     });
     test("Then the response should have a 400 status code", () => {
       expect(postResponse.statusCode).toBe(400);
@@ -47,7 +47,7 @@ describe("Given a blank database", () => {
   describe("When a blank GET is made to /qa/questions", () => {
     let getResponse: Response;
     beforeEach(async () => {
-      getResponse = await request(server).get(baseUrl).send({});
+      getResponse = await request(server).get(baseUrl).query({});
     });
     test("The the server responds with 400", () => {
       expect(getResponse.statusCode).toBe(400);
@@ -56,7 +56,7 @@ describe("Given a blank database", () => {
   describe("When a valid GET is made to /qa/questions", () => {
     let getResponse: Response;
     beforeEach(async () => {
-      getResponse = await request(server).get(baseUrl).send({
+      getResponse = await request(server).get(baseUrl).query({
         product_id: 1,
       });
     });
@@ -73,7 +73,7 @@ describe("Given a blank database", () => {
   describe("When a valid POST is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
-      postResponse = await request(server).post(baseUrl).send({
+      postResponse = await request(server).post(baseUrl).query({
         body: "What is this?",
         name: "Trevor Settles",
         email: "email@gmail.com",
@@ -89,7 +89,7 @@ describe("Given a blank database", () => {
     describe("And a valid GET is made to /qa/questions", () => {
       let getResponse: Response;
       beforeEach(async () => {
-        getResponse = await request(server).get(baseUrl).send({
+        getResponse = await request(server).get(baseUrl).query({
           product_id: 1,
         });
       });
@@ -112,7 +112,7 @@ describe("Given a blank database", () => {
     describe("When a valid POST is made to /qa/questions with a different product_id", () => {
       let otherPostResponse: Response;
       beforeEach(async () => {
-        otherPostResponse = await request(server).post(baseUrl).send({
+        otherPostResponse = await request(server).post(baseUrl).query({
           body: "Can I wear it?",
           name: "Trevor Settles",
           email: "email@gmail.com",
@@ -122,7 +122,7 @@ describe("Given a blank database", () => {
       describe("When a GET is made for the first product_id", () => {
         let getResponse: Response;
         beforeEach(async () => {
-          getResponse = await request(server).get(baseUrl).send({
+          getResponse = await request(server).get(baseUrl).query({
             product_id: 1,
           });
         });
@@ -133,7 +133,7 @@ describe("Given a blank database", () => {
       describe("When a GET is made for the second product_id", () => {
         let getResponse: Response;
         beforeEach(async () => {
-          getResponse = await request(server).get(baseUrl).send({
+          getResponse = await request(server).get(baseUrl).query({
             product_id: 2,
           });
         });
@@ -146,7 +146,7 @@ describe("Given a blank database", () => {
   describe("When a POST without a name is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
-      postResponse = await request(server).post(baseUrl).send({
+      postResponse = await request(server).post(baseUrl).query({
         ...validPost,
         name: undefined,
       });
@@ -158,7 +158,7 @@ describe("Given a blank database", () => {
   describe("When a POST without a body is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
-      postResponse = await request(server).post(baseUrl).send({
+      postResponse = await request(server).post(baseUrl).query({
         ...validPost,
         body: undefined,
       });
@@ -170,7 +170,7 @@ describe("Given a blank database", () => {
   describe("When a POST without an email is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
-      postResponse = await request(server).post(baseUrl).send({
+      postResponse = await request(server).post(baseUrl).query({
         ...validPost,
         email: undefined,
       });
@@ -182,7 +182,7 @@ describe("Given a blank database", () => {
   describe("When a POST without a productId is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
-      postResponse = await request(server).post(baseUrl).send({
+      postResponse = await request(server).post(baseUrl).query({
         ...validPost,
         product_id: undefined,
       });
