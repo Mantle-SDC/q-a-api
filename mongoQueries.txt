@@ -159,3 +159,13 @@ db.questions_in.aggregate([
     }
   }
 ])
+
+db.questions_combined.updateMany(
+  {},
+  [
+    {$addFields: {
+      "iso_date": {$toString: {$toDate: "$date"}}
+      }
+    }
+  ]
+)

@@ -1,6 +1,8 @@
+/* eslint-disable no-underscore-dangle */
 import { ObjectId, MongoClient } from "mongodb";
 import Answer from "../models/answer";
 import Question from "../models/question";
+import QuestionReponse from "../models/QuestionReponse";
 import Database from "./database";
 
 function MantleDB(url: string): Promise<MongoClient> {
@@ -25,20 +27,15 @@ function createMongoDB(url: string): Database<string> {
       .collection("questions_combined")
       .find({ product_id: productId })
       .map((d) => ({
-        ...d,
-        // eslint-disable-next-line no-underscore-dangle
-        id: d._id,
-        answers: d.answers?.map((answer: Record<string, unknown>) => ({
-          // eslint-disable-next-line no-underscore-dangle
-          id: answer._id,
-          answerer_name: answer.answerer_name,
-          body: answer.body,
-          date: answer.date,
-          helpfulness: answer.helpfulness,
-          photos: answer.photos,
-        })) || [],
+        question_id: d._id,
+        question_body: d.body,
+        question_date: d.iso_date,
+        asker_name: d.name,
+        question_helpfulness: d.helpful,
+        reported: false,
+        answers: d.answers_combined,
       }))
-      .toArray()) as Promise<Question<string>[]>,
+      .toArray()) as Promise<QuestionReponse[]>,
 
     getQuestion: async (questionId: string) => ((await db)
       .collection("questions")

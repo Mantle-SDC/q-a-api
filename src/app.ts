@@ -28,15 +28,7 @@ function App<T extends number | string>(
         const qs = await db.getQuestions(productId);
         res.status(200).send({
           product_id: productId,
-          results: qs.map((q) => ({
-            question_id: q.id,
-            question_body: q.body,
-            question_date: q.createdAt,
-            asker_name: q.name,
-            question_helpfulness: 0,
-            reported: false,
-            answers: q.answers,
-          })),
+          results: qs,
         });
       } catch (e) {
         res.status(500).send();
