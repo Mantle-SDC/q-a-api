@@ -24,9 +24,10 @@ function App<T extends number | string>(
   app.get(baseUrl, async (req, res, next) => {
     if (req.query.product_id) {
       try {
-        const qs = await db.getQuestions(parseInt(req.query.product_id.toString(), 10));
+        const productId = parseInt(req.query.product_id.toString(), 10);
+        const qs = await db.getQuestions(productId);
         res.status(200).send({
-          product_id: req.query.product_id,
+          product_id: productId,
           results: qs.map((q) => ({
             question_id: q.id,
             question_body: q.body,
@@ -55,6 +56,7 @@ function App<T extends number | string>(
       && req.query.email
       && req.query.product_id
     ) {
+      // console.log(req.query);
       const q = req.query as unknown as Question<T>;
       q.createdAt = dateConstructor();
       q.answers = [];

@@ -22,7 +22,7 @@ function createMongoDB(url: string): Database<string> {
 
   const result: Database<string> = {
     getQuestions: async (productId: number) => ((await db)
-      .collection("questions")
+      .collection("questions_combined")
       .find({ product_id: productId })
       .map((d) => ({
         ...d,
