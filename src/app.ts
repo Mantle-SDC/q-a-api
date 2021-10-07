@@ -16,11 +16,6 @@ function App<T extends number | string>(
   app.use(express.json());
   app.use(express.urlencoded());
 
-  app.use((req, res, next) => {
-    console.log(`got ${req.method} on ${req.url} with`, req.query);
-    next();
-  });
-
   app.get(baseUrl, async (req, res, next) => {
     if (req.query.product_id) {
       try {

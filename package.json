@@ -23,6 +23,7 @@
   "dependencies": {
     "axios": "^0.21.4",
     "express": "^4.17.1",
+    "k6": "^0.0.0",
     "mongodb": "^4.1.2",
     "mongodb-memory-server": "^7.4.2",
     "superagent": "^6.1.0",

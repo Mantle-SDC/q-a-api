@@ -1,8 +1,9 @@
 import App from "./app";
 import createMongoDB from "./database/MongoDB";
+import dbURL from "./env/env";
 
 App(
-  createMongoDB("mongodb://localhost:27017"),
+  createMongoDB(dbURL),
   () => new Date(),
   8080,
   (x) => x,
