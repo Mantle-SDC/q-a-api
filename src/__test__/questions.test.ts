@@ -1,9 +1,11 @@
 import request from "supertest";
 import http from "http";
 import { Response } from "superagent";
+import { MongoMemoryServer } from "mongodb-memory-server";
 import App from "../app";
 import baseUrl from "../urls";
-import InMemory from "../database/InMemory";
+import Database from "../database/database";
+import createMongoDB from "../database/MongoDB";
 
 const validPost = {
   body: "What is this?",
@@ -14,19 +16,29 @@ const validPost = {
 
 describe("Given a blank database", () => {
   let server: http.Server;
-  beforeEach(() => {
-    server = App(
-      InMemory(),
-      () => new Date(0),
-    );
+  let db: Database<string>;
+  beforeEach((done) => {
+    (async () => {
+      const mem = await MongoMemoryServer.create();
+      const url = mem.getUri();
+      db = createMongoDB(url);
+      server = App(
+        db,
+        () => new Date(0),
+        8080,
+        (x) => x,
+      );
+      done();
+    })();
   });
   afterEach(() => {
     server.close();
+    db.close();
   });
   describe("When a blank POST is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
-      postResponse = await request(server).post(baseUrl).send({});
+      postResponse = await request(server).post(baseUrl).query({});
     });
     test("Then the response should have a 400 status code", () => {
       expect(postResponse.statusCode).toBe(400);
@@ -35,7 +47,7 @@ describe("Given a blank database", () => {
   describe("When a blank GET is made to /qa/questions", () => {
     let getResponse: Response;
     beforeEach(async () => {
-      getResponse = await request(server).get(baseUrl).send({});
+      getResponse = await request(server).get(baseUrl).query({});
     });
     test("The the server responds with 400", () => {
       expect(getResponse.statusCode).toBe(400);
@@ -44,7 +56,7 @@ describe("Given a blank database", () => {
   describe("When a valid GET is made to /qa/questions", () => {
     let getResponse: Response;
     beforeEach(async () => {
-      getResponse = await request(server).get(baseUrl).send({
+      getResponse = await request(server).get(baseUrl).query({
         product_id: 1,
       });
     });
@@ -61,7 +73,7 @@ describe("Given a blank database", () => {
   describe("When a valid POST is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
-      postResponse = await request(server).post(baseUrl).send({
+      postResponse = await request(server).post(baseUrl).query({
         body: "What is this?",
         name: "Trevor Settles",
         email: "email@gmail.com",
@@ -71,10 +83,13 @@ describe("Given a blank database", () => {
     test("Then the response should have a 201 response", () => {
       expect(postResponse.statusCode).toBe(201);
     });
+    test("then the response should contain the id of the question created", () => {
+      expect(typeof postResponse.body.question_id).toBeTruthy();
+    });
     describe("And a valid GET is made to /qa/questions", () => {
       let getResponse: Response;
       beforeEach(async () => {
-        getResponse = await request(server).get(baseUrl).send({
+        getResponse = await request(server).get(baseUrl).query({
           product_id: 1,
         });
       });
@@ -87,17 +102,17 @@ describe("Given a blank database", () => {
         expect(result).toHaveProperty("question_body", "What is this?");
         expect(result).toHaveProperty("question_date", "1970-01-01T00:00:00.000Z");
         expect(result).toHaveProperty("asker_name", "Trevor Settles");
-        expect(result).toHaveProperty("question_helpfulness", 0);
+        expect(result.question_helpfulness).toBe(0);
         expect(result).toHaveProperty("reported", false);
-        expect(result).toHaveProperty("answers", {});
+        expect(result.answers).toEqual([]);
 
-        expect(typeof result.question_id).toBe(typeof 1);
+        expect(typeof result.question_id).toBeTruthy();
       });
     });
     describe("When a valid POST is made to /qa/questions with a different product_id", () => {
-      // let otherPostResponse: Response;
+      let otherPostResponse: Response;
       beforeEach(async () => {
-        await request(server).post(baseUrl).send({
+        otherPostResponse = await request(server).post(baseUrl).query({
           body: "Can I wear it?",
           name: "Trevor Settles",
           email: "email@gmail.com",
@@ -107,7 +122,7 @@ describe("Given a blank database", () => {
       describe("When a GET is made for the first product_id", () => {
         let getResponse: Response;
         beforeEach(async () => {
-          getResponse = await request(server).get(baseUrl).send({
+          getResponse = await request(server).get(baseUrl).query({
             product_id: 1,
           });
         });
@@ -118,12 +133,12 @@ describe("Given a blank database", () => {
       describe("When a GET is made for the second product_id", () => {
         let getResponse: Response;
         beforeEach(async () => {
-          getResponse = await request(server).get(baseUrl).send({
+          getResponse = await request(server).get(baseUrl).query({
             product_id: 2,
           });
         });
         test("Then the response cotains the questions for the second product", () => {
-          expect(getResponse.body.results[0].question_id).toBe(2);
+          expect(getResponse.body.results[0].question_id).toBe(otherPostResponse.body.question_id);
         });
       });
     });
@@ -131,7 +146,7 @@ describe("Given a blank database", () => {
   describe("When a POST without a name is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
-      postResponse = await request(server).post(baseUrl).send({
+      postResponse = await request(server).post(baseUrl).query({
         ...validPost,
         name: undefined,
       });
@@ -143,7 +158,7 @@ describe("Given a blank database", () => {
   describe("When a POST without a body is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
-      postResponse = await request(server).post(baseUrl).send({
+      postResponse = await request(server).post(baseUrl).query({
         ...validPost,
         body: undefined,
       });
@@ -155,7 +170,7 @@ describe("Given a blank database", () => {
   describe("When a POST without an email is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
-      postResponse = await request(server).post(baseUrl).send({
+      postResponse = await request(server).post(baseUrl).query({
         ...validPost,
         email: undefined,
       });
@@ -167,7 +182,7 @@ describe("Given a blank database", () => {
   describe("When a POST without a productId is made to /qa/questions", () => {
     let postResponse: Response;
     beforeEach(async () => {
-      postResponse = await request(server).post(baseUrl).send({
+      postResponse = await request(server).post(baseUrl).query({
         ...validPost,
         product_id: undefined,
       });

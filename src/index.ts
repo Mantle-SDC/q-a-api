@@ -1,7 +1,10 @@
 import App from "./app";
-import InMemory from "./database/InMemory";
+import createMongoDB from "./database/MongoDB";
+import dbURL from "./env/env";
 
 App(
-  InMemory(),
+  createMongoDB(dbURL),
   () => new Date(),
+  8080,
+  (x) => x,
 );

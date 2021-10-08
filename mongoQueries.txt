@@ -1,0 +1,171 @@
+mongoimport --type csv -d mantle -c questions_in --headerline --drop data/questions.csv
+mongoimport --type csv -d mantle -c answers_in --headerline --drop data/answers.csv
+mongoimport --type csv -d mantle -c answers_photos_in --headerline --drop data/answers_photos.csv
+
+db.questions_in.createIndex( { id: 1 } )
+db.answers_in.createIndex( { id: 1 } )
+db.answers_photos_in.createIndex( { id: 1 } )
+db.answers_photos_in.createIndex( { answer_id: 1 } )
+
+db.questions_in.updateMany(
+  { id: { $gt: 0 }},
+  {
+    $set: {answers: []},
+  }
+)
+
+db.answers_in.updateMany(
+  { id: { $gt: 0 }},
+  {
+    $set: {photos: []},
+  }
+)
+
+db.answers_in.aggregate([
+  {$lookup:{
+      from: "answers_photos_in",
+      localField: "id",
+      foreignField: "answer_id",
+      as: "photos"
+    }
+  },
+  {$out: {
+      db: "mantle",
+      coll: "answers_combined"
+    }
+  }
+])
+
+db.answers_combined.updateMany(
+  {},
+  [
+    { $addFields: { "photos2": {
+          $map: {
+            input: "$photos",
+            as: "photo",
+            in: {
+              id: "$$photo.id",
+              url: "$$photo.url",
+            }
+          }
+    } } }
+  ],
+)
+
+db.answers_combined.updateMany(
+  {},
+  [
+    {
+      $unset: "photos",
+    }
+  ]
+)
+
+db.answers_combined.updateMany(
+  {},
+  [
+    {
+      $set: {"photos": "$photos2"}
+    }
+  ]
+)
+
+db.answers_combined.updateMany(
+  {},
+  [
+    {
+      $unset: "photos2",
+    }
+  ]
+)
+
+db.answers_combined.updateMany(
+  {},
+  [
+    {$addFields: {
+      "date": {$toDate: "$date_written"}
+      }
+    }
+  ]
+)
+
+db.answers_combined.updateMany(
+  {},
+  [
+    {
+      $unset: "date_written",
+    }
+  ]
+)
+
+db.answers_combined.updateMany( {}, { $rename: { "helpful": "helpfulness" } } )
+
+db.questions.aggregate([
+  {$lookup:{
+      from: "answers_combined",
+      localField: "id",
+      foreignField: "question_id",
+      as: "answers_combined"
+    }
+  },
+  {$out: {
+      db: "mantle",
+      coll: "questions_combined"
+    }
+  }
+])
+
+db.questions_combined.createIndex( { id: 1 } )
+
+db.answers_combined.updateMany(
+  {},
+  [
+    {$addFields: {
+      "reported": {$toBool: "$reported_in"}
+      }
+    }
+  ]
+)
+
+db.answers_combined.updateMany(
+  {},
+  [
+    {
+      $unset: "reported_in",
+    }
+  ]
+)
+
+db.answers_combined.updateMany(
+  {},
+  [
+    {
+      $unset: "answerer_email",
+    }
+  ]
+)
+
+db.questions_in.aggregate([
+  {$lookup:{
+      from: "answers_combined",
+      localField: "id",
+      foreignField: "question_id",
+      as: "answers_combined"
+    }
+  },
+  {$out: {
+      db: "mantle",
+      coll: "questions_combined"
+    }
+  }
+])
+
+db.questions_combined.updateMany(
+  {},
+  [
+    {$addFields: {
+      "iso_date": {$toString: {$toDate: "$date"}}
+      }
+    }
+  ]
+)
